@@ -1,84 +1,118 @@
-import spelunk from 'spelunk'
+// import spelunk from 'spelunk'
 import log from 'log-utils'
 import colors from 'ansi-colors'
 import path from 'path'
-import fsextra from 'fs-extra'
+// import fsextra from 'fs-extra'
+import fs from 'fs'
+import { createPatch, applyPatch } from 'rfc6902'
+import { set } from 'object-path'
 
-const generateTranslations = (options) => {
-  const target = options.target
-  const baseLanguage = options.baseLanguage
-  let transformer = options.transformer
-
-  let i18nData = spelunk.sync(target, {
-    keepExtensions: false,
-    exclude: path.join(target, '/') + '**/*.!(json)'
-  })
-
-  let patches = {}
-
-  let basei18n = i18nData[baseLanguage]
-  let langi18n, lang, basei18nComponenti18n, langi18nComponenti18n, key, clonedBasei18nComponenti18n, component
-  for (lang in i18nData) {
-    if (lang === baseLanguage) continue
-    langi18n = i18nData[lang]
-    patches[lang] = {}
-    for (component in basei18n) {
-      basei18nComponenti18n = basei18n[component]
-      langi18nComponenti18n = langi18n[component]
-      if (langi18nComponenti18n) {
-        let t = JSON.stringify(basei18nComponenti18n)
-        clonedBasei18nComponenti18n = JSON.parse(t)
-        if (JSON.stringify(langi18nComponenti18n) !== t) {
-          for (key in clonedBasei18nComponenti18n) {
-            clonedBasei18nComponenti18n[key] = langi18nComponenti18n[key] || clonedBasei18nComponenti18n[key]
-          }
-          patches[lang][component] = clonedBasei18nComponenti18n
-          i18nData[lang][component] = clonedBasei18nComponenti18n
-        }
-      } else if (!langi18nComponenti18n) {
-        i18nData[lang][component] = basei18nComponenti18n || {}
-        patches[lang][component] = basei18nComponenti18n || {}
-      }
-    }
-
-    for (component in langi18n) {
-      if (!basei18n[component]) {
-        patches[lang][component] = null
-      }
+const walk = ({ dir, filter, relativeTo, list = {}, depth = 0 }) => {
+  const files = fs.readdirSync(dir)
+  ++depth
+  for (const file of files) {
+    const _file = path.join(dir, file)
+    if (fs.statSync(_file).isDirectory()) {
+      walk({
+        dir: _file,
+        filter,
+        relativeTo: depth === 1 ? _file : relativeTo,
+        depth,
+        list: depth === 1 ? list[file] = {} : list
+      })
+    } else if ((filter.indexOf(path.extname(_file)) > -1) && depth > 1) {
+      list[path.relative(relativeTo, _file)] = JSON.parse(fs.readFileSync(_file, 'utf-8'))
     }
   }
-
-  console.log(colors.grey(`  ${log.info} Languages:`), colors.green(`${Object.keys(i18nData).join(', ')}`))
-
-  for (lang in patches) {
-    let components = Object.keys(patches[lang])
-    components.forEach((component) => {
-      let content = patches[lang][component]
-      let filepath = path.join(target, lang, component + '.json')
-      if (!content) {
-        console.log(colors.magenta(`  ${log.info} Removing ${lang}/${component}. Matching base language: ${baseLanguage}`))
-        fsextra.removeSync(filepath)
-      } else {
-        console.log(colors.grey(`  ${log.info} Matching ${lang}/${component} with ${baseLanguage}/${component} keys`))
-        fsextra.writeJSONSync(filepath, content, {
-          spaces: '\t'
-        })
-      }
-    })
-  }
-
-  transformer = transformer || ((lang, data) => {
-    return {
-      translations: i18nData[lang]
-    }
-  })
-
-  for (lang in i18nData) {
-    i18nData[lang] = transformer(lang, i18nData[lang])
-  }
-
-  return i18nData
+  return list
 }
+
+const i18n = (options) => {
+
+  const { target, baseLanguage, transformer } = options
+
+  const transform = transformer || ((lang, data) => {
+    return { translations: data }
+  })
+
+  const data = walk({
+    dir: target, 
+    filter: ['.json'],
+    relativeTo: target,
+    base: baseLanguage
+  })
+
+  const base = data[baseLanguage]
+
+  const patches = {}
+  const result = {}
+
+  for (const lang in data) {
+    const langJson = data[lang]
+    if (baseLanguage !== lang) {
+      let patch = createPatch(langJson, base)
+      patch = patch.filter((change) => {
+        return change.op !== "replace"
+      })
+      patches[lang] = patch
+      applyPatch(langJson, patch)
+    }
+    
+    let translations = {}
+    
+    for (const file in langJson) {
+      const parsed = path.parse(file)
+      const key = path.join(parsed.dir, parsed.name).split(path.sep)
+      set(translations, key, langJson[file])
+    }
+
+    result[lang] = transform(lang, translations)
+  }
+
+  const languages = colors.green(`${Object.keys(result).join(', ')}`)
+  console.log(colors.grey(colors.underline(`Languages found:`)), languages)
+
+  const methods = {
+    add: 'green',
+    remove: 'magenta'
+  }
+
+  for (const lang in patches) {
+    console.log(colors.grey(colors.underline(`Ops for language: ${lang}`)))
+    for (let i = 0; i < patches[lang].length; i++) {
+      const patch = patches[lang][i]
+      const message = ` op: ${patch.op} path: ${patch.path}`
+      console.log(colors[methods[patch.op]](message))
+      let location = patch.path.substring(1).replace(/(~1)/g, '/')
+      location = path.join(target, lang, location)
+      const parsed = path.parse(location)
+      console.log(parsed)
+    }
+  }
+
+  console.log(JSON.stringify(patches, null, '\t'))
+
+  return result
+}
+
+// let changed = []
+// patch = patch.filter((change) => {
+//   const valid = change.op !== "replace"
+//   if (valid) {
+//     let location = change.path.substring(1).replace(/(~1)/g, '/')
+//     let parsed = path.parse(location)
+//     changed.push(parsed)
+//   }
+//   return valid
+// })
+// patches[lang] = {
+//   patch,
+//   changed
+// }
+
+// let location = change.path.substring(1).replace(/(~1)/g, '/')
+//         let parsed = path.parse(location)
+//         toBe.changed.push([parsed, change.op])
 
 let generated = null
 let moduleName = 'i18n.translations'
@@ -98,7 +132,7 @@ const i18nBundler = (options) => {
           colors.underline.cyan(`\ni18n bundler`), colors.grey(`: Target: ${options.target}, Base language: ${options.baseLanguage}`)
         )
         if (!generated) {
-          generated = generateTranslations(options)
+          generated = i18n(options)
           generated = 'export default ' + JSON.stringify(generated)
         }
         console.log(
