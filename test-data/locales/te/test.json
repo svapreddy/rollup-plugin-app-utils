@@ -1,4 +1,11 @@
 {
   "willbeRemoved": "willbeRemoved",
-  "willnotOverride": "te text"
+  "willnotOverride": "te text",
+  "nested": {
+    "nested": {
+      "nested": {
+        "nested": {}
+      }
+    }
+  }
 }

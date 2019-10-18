@@ -29,7 +29,7 @@ const walk = ({ dir, filter, relativeTo, list = {}, depth = 0 }) => {
 
 const i18n = (options) => {
 
-  const { target, baseLanguage, transformer } = options
+  const { target, baseLanguage, transformer, generated } = options
 
   const transform = transformer || ((lang, data) => {
     return { translations: data }
@@ -72,6 +72,8 @@ const i18n = (options) => {
   const languages = colors.green(`${Object.keys(result).join(', ')}`)
   console.log(colors.grey(colors.underline(`Languages found:`)), languages)
 
+  console.log(JSON.stringify(patches, null, '\t'))
+
   const methods = {
     add: 'green',
     remove: 'magenta'
@@ -79,18 +81,41 @@ const i18n = (options) => {
 
   for (const lang in patches) {
     console.log(colors.grey(colors.underline(`Ops for language: ${lang}`)))
+    
     for (let i = 0; i < patches[lang].length; i++) {
       const patch = patches[lang][i]
-      const message = ` op: ${patch.op} path: ${patch.path}`
+      const message = ` op: ${patch.op} path: ${patch.path} value: ${patch.value || 'NA'}`
       console.log(colors[methods[patch.op]](message))
+      
+      let key = null
+
       let location = patch.path.substring(1).replace(/(~1)/g, '/')
-      location = path.join(target, lang, location)
-      const parsed = path.parse(location)
-      console.log(parsed)
+      let split = location.split('.json')
+      if (split[1]) {
+        key = split[1].substring(1)
+      }
+
+      location = path.join(target, lang, `${split[0]}.json`)
+      location = path.join(target, path.relative(target, location))
+
+      if (patch.op === 'add') {
+        let value = patch.value
+        if (!fs.existsSync(location)) {
+          fs.writeFileSync(location, value)
+        } else if (key) {
+          const content = JSON.parse(fs.readFileSync(location, 'utf-8'))
+          set(content, key.split('/'), value)
+        }
+      } else if (patch.op === 'remove') {
+        fs.unlinkSync(location)
+      }
+      
+      console.log(location, key)
+
     }
   }
 
-  console.log(JSON.stringify(patches, null, '\t'))
+  update({ patches, target, generated })
 
   return result
 }

@@ -1,4 +1,13 @@
 {
   "willbeAdded": "willbeAdded",
-  "willnotOverride": "en text"
+  "willnotOverride": "en text",
+  "nested": {
+    "nested": {
+      "nested": {
+        "nested": {
+          "some-key": "some-value"
+        }
+      }
+    }
+  }
 }
