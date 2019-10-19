@@ -1,4 +1,20 @@
 {
   "willbeRemoved": "willbeRemoved",
-  "willnotOverride": "te text"
+  "willnotOverride": "te text",
+  "nested": {
+    "nested": {
+      "nested": {
+        "nested": {
+          "willBeRemovedDuringBundle": true
+        }
+      }
+    }
+  },
+  "nested-2": {
+    "nested-2": {
+      "nested-2": {
+        "nested-2": {}
+      }
+    }
+  }
 }

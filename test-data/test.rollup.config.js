@@ -1,19 +1,19 @@
 import Utils from '../src/index.js'
 
-let somedir1 = './test-data-copy/tdir/somedir1'
-let somedir2 = './test-data-copy/tdir/somedir2'
-let somedir3 = './test-data-copy/tdir/somedir3'
+const somedir1 = './test-data-copy/tdir/somedir1'
+const somedir2 = './test-data-copy/tdir/somedir2'
+const somedir3 = './test-data-copy/tdir/somedir3'
 
-let template = './test-data-copy/test.template.html'
-let notFoundTemplate = './test-data-copy/test.does.not.exist.template.html'
-let target = './test-data-copy/tdir/index.html'
-let injects = {
+const template = './test-data-copy/test.template.html'
+const notFoundTemplate = './test-data-copy/test.does.not.exist.template.html'
+const target = './test-data-copy/tdir/index.html'
+const injects = {
   title: '___title___',
   keyOne: '___keyOne____'
 }
 
-let localesDir = './test-data-copy/locales'
-let cleanableDir = './test-data-copy/cleanable/'
+const localesDir = './test-data-copy/locales'
+// const cleanableDir = './test-data-copy/cleanable/'
 
 const outputOptions = {
   file: './test-data-copy/output.js',

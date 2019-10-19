@@ -2,13 +2,13 @@ import colors from 'ansi-colors'
 import log from 'log-utils'
 import fsextra from 'fs-extra'
 
-let prepareDirectories = (directories) => {
+const prepareDirectories = (directories) => {
   return {
     buildStart () {
       if (typeof directories === 'string') {
         directories = [directories]
       }
-      console.log(colors.bold.underline.cyan(`\nPreparing directories`))
+      console.log(colors.bold.underline.cyan('\nPreparing directories'))
       directories.forEach((dir) => {
         try {
           fsextra.ensureDirSync(dir)

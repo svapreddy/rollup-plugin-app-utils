@@ -1,87 +1,129 @@
-import spelunk from 'spelunk'
 import log from 'log-utils'
 import colors from 'ansi-colors'
 import path from 'path'
 import fsextra from 'fs-extra'
+import fs from 'fs'
+import { createPatch, applyPatch } from 'rfc6902'
+import objectPath from 'object-path'
 
-const generateTranslations = (options) => {
-  const target = options.target
-  const baseLanguage = options.baseLanguage
-  let transformer = options.transformer
+const walk = ({ dir, filter, relativeTo, list = {}, depth = 0 }) => {
+  const files = fs.readdirSync(dir)
+  ++depth
+  for (const i in files) {
+    const file = files[i]
+    const _file = path.join(dir, file)
+    if (fs.statSync(_file).isDirectory()) {
+      walk({
+        dir: _file,
+        filter,
+        relativeTo: depth === 1 ? _file : relativeTo,
+        depth,
+        list: depth === 1 ? list[file] = {} : list
+      })
+    } else if ((filter.indexOf(path.extname(_file)) > -1) && depth > 1) {
+      list[path.relative(relativeTo, _file)] = JSON.parse(fs.readFileSync(_file, 'utf-8'))
+    }
+  }
+  return list
+}
 
-  let i18nData = spelunk.sync(target, {
-    keepExtensions: false,
-    exclude: path.join(target, '/') + '**/*.!(json)'
+const i18n = (options) => {
+  const { target, baseLanguage, transformer } = options
+
+  const transform = transformer || ((lang, data) => {
+    return { translations: data }
   })
 
-  let patches = {}
+  const data = walk({
+    dir: target,
+    filter: ['.json'],
+    relativeTo: target,
+    base: baseLanguage
+  })
 
-  let basei18n = i18nData[baseLanguage]
-  let langi18n, lang, basei18nComponenti18n, langi18nComponenti18n, key, clonedBasei18nComponenti18n, component
-  for (lang in i18nData) {
-    if (lang === baseLanguage) continue
-    langi18n = i18nData[lang]
-    patches[lang] = {}
-    for (component in basei18n) {
-      basei18nComponenti18n = basei18n[component]
-      langi18nComponenti18n = langi18n[component]
-      if (langi18nComponenti18n) {
-        let t = JSON.stringify(basei18nComponenti18n)
-        clonedBasei18nComponenti18n = JSON.parse(t)
-        if (JSON.stringify(langi18nComponenti18n) !== t) {
-          for (key in clonedBasei18nComponenti18n) {
-            clonedBasei18nComponenti18n[key] = langi18nComponenti18n[key] || clonedBasei18nComponenti18n[key]
-          }
-          patches[lang][component] = clonedBasei18nComponenti18n
-          i18nData[lang][component] = clonedBasei18nComponenti18n
+  const base = data[baseLanguage]
+
+  const patches = {}
+  const result = {}
+
+  for (const lang in data) {
+    const langJson = data[lang]
+    if (baseLanguage !== lang) {
+      let patch = createPatch(langJson, base)
+      patch = patch.filter((change) => {
+        return change.op !== 'replace'
+      })
+      patches[lang] = patch
+      applyPatch(langJson, patch)
+    }
+
+    const translations = {}
+
+    for (const file in langJson) {
+      const parsed = path.parse(file)
+      const key = path.join(parsed.dir, parsed.name).split(path.sep)
+      objectPath.set(translations, key, langJson[file])
+    }
+
+    result[lang] = transform(lang, translations)
+  }
+
+  const languageList = Object.keys(result).join(', ')
+
+  console.log(colors.bold('\nLanguages found:'), colors.green(`${languageList}`))
+
+  for (const lang in patches) {
+    console.log(colors.bold(`\nLanguage: "${lang}" changes report`))
+
+    for (let i = 0; i < patches[lang].length; i++) {
+      const patch = patches[lang][i]
+      let message = ''
+
+      let key = null
+      let location = patch.path.substring(1).replace(/(~1)/g, '/')
+      const split = location.split('.json')
+      if (split[1]) {
+        key = split[1].substring(1)
+      }
+
+      location = path.join(target, lang, `${split[0]}.json`)
+      location = path.join(target, path.relative(target, location))
+
+      let content
+      if (patch.op === 'add') {
+        const value = patch.value
+        if (key && value) {
+          content = fsextra.readJsonSync(location)
+          objectPath.set(content, key.split('/'), value)
+          message = `${log.success} ${key} with the value from ${baseLanguage} is added to the file: ${location}`
+        } else {
+          message = `${log.success} ${location} is created. Used the content from base language: ${baseLanguage}`
+          content = value
         }
-      } else if (!langi18nComponenti18n) {
-        i18nData[lang][component] = basei18nComponenti18n || {}
-        patches[lang][component] = basei18nComponenti18n || {}
+        fsextra.writeJSONSync(location, content, { spaces: '\t' })
+      } else if (patch.op === 'remove') {
+        if (key) {
+          message = `${log.error} The key ${key} is deleted from the file: ${location}`
+          content = fsextra.readJsonSync(location)
+          objectPath.del(content, key.split('/'))
+          fsextra.writeJSONSync(location, content, { spaces: '\t' })
+        } else {
+          message = `${log.error} Removing the file ${location}. It does not exist in base language(${baseLanguage}) folder`
+          fs.unlinkSync(location)
+        }
       }
-    }
 
-    for (component in langi18n) {
-      if (!basei18n[component]) {
-        patches[lang][component] = null
-      }
+      console.log(colors.grey(`   ${message}`))
     }
   }
 
-  console.log(colors.grey(`  ${log.info} Languages:`), colors.green(`${Object.keys(i18nData).join(', ')}`))
+  console.log(colors.bold(`\nJSON files in "${Object.keys(patches).join(', ')}" are updated to match base language ${baseLanguage}`))
 
-  for (lang in patches) {
-    let components = Object.keys(patches[lang])
-    components.forEach((component) => {
-      let content = patches[lang][component]
-      let filepath = path.join(target, lang, component + '.json')
-      if (!content) {
-        console.log(colors.magenta(`  ${log.info} Removing ${lang}/${component}. Matching base language: ${baseLanguage}`))
-        fsextra.removeSync(filepath)
-      } else {
-        console.log(colors.grey(`  ${log.info} Matching ${lang}/${component} with ${baseLanguage}/${component} keys`))
-        fsextra.writeJSONSync(filepath, content, {
-          spaces: '\t'
-        })
-      }
-    })
-  }
-
-  transformer = transformer || ((lang, data) => {
-    return {
-      translations: i18nData[lang]
-    }
-  })
-
-  for (lang in i18nData) {
-    i18nData[lang] = transformer(lang, i18nData[lang])
-  }
-
-  return i18nData
+  return result
 }
 
 let generated = null
-let moduleName = 'i18n.translations'
+const moduleName = 'i18n.translations'
 
 const i18nBundler = (options) => {
   return {
@@ -95,14 +137,14 @@ const i18nBundler = (options) => {
     load (id) {
       if (id === moduleName) {
         console.log(
-          colors.underline.cyan(`\ni18n bundler`), colors.grey(`: Target: ${options.target}, Base language: ${options.baseLanguage}`)
+          colors.underline.cyan('\ni18n bundler'), colors.grey(`: Target: ${options.target}, Base language: ${options.baseLanguage}`)
         )
         if (!generated) {
-          generated = generateTranslations(options)
+          generated = i18n(options)
           generated = 'export default ' + JSON.stringify(generated)
         }
         console.log(
-          colors.grey(`  ${log.info} Import translations using: `) + colors.bold.green(`import translations from '${moduleName}'`)
+          colors.bold('\nImport translations using: ') + colors.bold.green(`import translations from '${moduleName}'`)
         )
         return generated
       }

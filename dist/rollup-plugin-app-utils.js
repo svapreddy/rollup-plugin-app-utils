@@ -1,10 +1,10 @@
 /** @license
  * Autodesk rollup-plugin-app-utils
- * Date: 2019-02-22
+ * Date: 2019-10-19
  * License: Apache-2.0
  *
  * Bundled dependencies (npm packages): 
- * {"package":"log-utils@1.0.0","license":"MIT","link":"https://github.com/jonschlinkert/log-utils"}, {"package":"ansi-colors@3.2.3","license":"MIT","link":"https://github.com/doowb/ansi-colors"}, {"package":"fs-extra@7.0.1","license":"MIT","link":"https://github.com/jprichardson/node-fs-extra"}, {"package":"spelunk@0.5.0","license":"(MIT)","link":"https://github.com/Rich-Harris/spelunk"}, {"package":"string-template@1.0.0","license":"MIT","link":"https://github.com/Matt-Esch/string-template"}, {"package":"graceful-fs@4.1.15","license":"ISC","link":"https://github.com/isaacs/node-graceful-fs#readme"}, {"package":"time-stamp@2.2.0","license":"MIT","link":"https://github.com/jonschlinkert/time-stamp"}, {"package":"minimatch@0.2.14","license":{"type":"MIT","url":"http://github.com/isaacs/minimatch/raw/master/LICENSE"},"link":"https://github.com/isaacs/minimatch#readme"}, {"package":"es6-promise@1.0.0","license":"MIT","link":"https://github.com/jakearchibald/ES6-Promises#readme"}, {"package":"jsonfile@4.0.0","license":"MIT","link":"https://github.com/jprichardson/node-jsonfile#readme"}, {"package":"universalify@0.1.2","license":"MIT","link":"https://github.com/RyanZim/universalify#readme"}
+ * {"package":"ansi-colors@3.2.3","license":"MIT","link":"https://github.com/doowb/ansi-colors"}, {"package":"time-stamp@2.2.0","license":"MIT","link":"https://github.com/jonschlinkert/time-stamp"}, {"package":"log-utils@1.0.0","license":"MIT","link":"https://github.com/jonschlinkert/log-utils"}, {"package":"universalify@0.1.2","license":"MIT","link":"https://github.com/RyanZim/universalify#readme"}, {"package":"graceful-fs@4.1.15","license":"ISC","link":"https://github.com/isaacs/node-graceful-fs#readme"}, {"package":"fs-extra@7.0.1","license":"MIT","link":"https://github.com/jprichardson/node-fs-extra"}, {"package":"jsonfile@4.0.0","license":"MIT","link":"https://github.com/jprichardson/node-jsonfile#readme"}, {"package":"string-template@1.0.0","license":"MIT","link":"https://github.com/Matt-Esch/string-template"}, {"package":"rfc6902@3.0.4","license":"MIT","link":"https://github.com/chbrown/rfc6902"}, {"package":"object-path@0.11.4","license":"MIT","link":"https://github.com/mariocasciaro/object-path"}
  */
 'use strict';
 
@@ -15,6 +15,10 @@ var fs = _interopDefault(require('fs'));
 var path = _interopDefault(require('path'));
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+function unwrapExports (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x.default : x;
+}
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -3850,7 +3854,7 @@ var emptyDirectories = function (directories) {
       if (typeof directories === 'string') {
         directories = [directories];
       }
-      console.log(ansiColors.bold.underline.cyan("\nCleaning directories"));
+      console.log(ansiColors.bold.underline.cyan('\nCleaning directories'));
       directories.forEach(function (dir) {
         try {
           lib.emptyDirSync(dir);
@@ -3870,7 +3874,7 @@ var prepareDirectories = function (directories) {
       if (typeof directories === 'string') {
         directories = [directories];
       }
-      console.log(ansiColors.bold.underline.cyan("\nPreparing directories"));
+      console.log(ansiColors.bold.underline.cyan('\nPreparing directories'));
       directories.forEach(function (dir) {
         try {
           lib.ensureDirSync(dir);
@@ -3941,2001 +3945,1289 @@ var htmlInjector = function (options) {
   }
 };
 
-var config = {
-  instrument: false
-};
-
-function configure(name, value) {
-  if (arguments.length === 2) {
-    config[name] = value;
-  } else {
-    return config[name];
-  }
-}
-
-var config_2 = config;
-var configure_1 = configure;
-
-var config_1 = {
-	config: config_2,
-	configure: configure_1
-};
-
-function objectOrFunction(x) {
-  return isFunction(x) || (typeof x === "object" && x !== null);
-}
-
-function isFunction(x) {
-  return typeof x === "function";
-}
-
-function isArray(x) {
-  return Object.prototype.toString.call(x) === "[object Array]";
-}
-
-// Date.now is not available in browsers < IE9
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now#Compatibility
-var now = Date.now || function() { return new Date().getTime(); };
-
-
-var objectOrFunction_1 = objectOrFunction;
-var isFunction_1 = isFunction;
-var isArray_1 = isArray;
-var now_1 = now;
-
-var utils = {
-	objectOrFunction: objectOrFunction_1,
-	isFunction: isFunction_1,
-	isArray: isArray_1,
-	now: now_1
-};
-
-/* global toString */
-
-var isArray$1 = utils.isArray;
-var isFunction$1 = utils.isFunction;
-
+var pointer = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
-  Returns a promise that is fulfilled when all the given promises have been
-  fulfilled, or rejected if any of them become rejected. The return promise
-  is fulfilled with an array that gives all the values in the order they were
-  passed in the `promises` array argument.
+Unescape token part of a JSON Pointer string
 
-  Example:
+`token` should *not* contain any '/' characters.
 
-  ```javascript
-  var promise1 = RSVP.resolve(1);
-  var promise2 = RSVP.resolve(2);
-  var promise3 = RSVP.resolve(3);
-  var promises = [ promise1, promise2, promise3 ];
+> Evaluation of each reference token begins by decoding any escaped
+> character sequence.  This is performed by first transforming any
+> occurrence of the sequence '~1' to '/', and then transforming any
+> occurrence of the sequence '~0' to '~'.  By performing the
+> substitutions in this order, an implementation avoids the error of
+> turning '~01' first into '~1' and then into '/', which would be
+> incorrect (the string '~01' correctly becomes '~1' after
+> transformation).
 
-  RSVP.all(promises).then(function(array){
-    // The array here would be [ 1, 2, 3 ];
-  });
-  ```
+Here's my take:
 
-  If any of the `promises` given to `RSVP.all` are rejected, the first promise
-  that is rejected will be given as an argument to the returned promises's
-  rejection handler. For example:
-
-  Example:
-
-  ```javascript
-  var promise1 = RSVP.resolve(1);
-  var promise2 = RSVP.reject(new Error("2"));
-  var promise3 = RSVP.reject(new Error("3"));
-  var promises = [ promise1, promise2, promise3 ];
-
-  RSVP.all(promises).then(function(array){
-    // Code here never runs because there are rejected promises!
-  }, function(error) {
-    // error.message === "2"
-  });
-  ```
-
-  @method all
-  @for RSVP
-  @param {Array} promises
-  @param {String} label
-  @return {Promise} promise that is fulfilled when all `promises` have been
-  fulfilled, or rejected if any of them become rejected.
+~1 is unescaped with higher priority than ~0 because it is a lower-order escape character.
+I say "lower order" because '/' needs escaping due to the JSON Pointer serialization technique.
+Whereas, '~' is escaped because escaping '/' uses the '~' character.
 */
-function all(promises) {
-  /*jshint validthis:true */
-  var Promise = this;
-
-  if (!isArray$1(promises)) {
-    throw new TypeError('You must pass an array to all.');
-  }
-
-  return new Promise(function(resolve, reject) {
-    var results = [], remaining = promises.length,
-    promise;
-
-    if (remaining === 0) {
-      resolve([]);
-    }
-
-    function resolver(index) {
-      return function(value) {
-        resolveAll(index, value);
-      };
-    }
-
-    function resolveAll(index, value) {
-      results[index] = value;
-      if (--remaining === 0) {
-        resolve(results);
-      }
-    }
-
-    for (var i = 0; i < promises.length; i++) {
-      promise = promises[i];
-
-      if (promise && isFunction$1(promise.then)) {
-        promise.then(resolver(i), reject);
-      } else {
-        resolveAll(i, promise);
-      }
-    }
-  });
+function unescape(token) {
+    return token.replace(/~1/g, '/').replace(/~0/g, '~');
 }
+/** Escape token part of a JSON Pointer string
 
-var all_2 = all;
+> '~' needs to be encoded as '~0' and '/'
+> needs to be encoded as '~1' when these characters appear in a
+> reference token.
 
-var all_1 = {
-	all: all_2
-};
-
-/* global toString */
-var isArray$2 = utils.isArray;
-
+This is the exact inverse of `unescape()`, so the reverse replacements must take place in reverse order.
+*/
+function escape(token) {
+    return token.replace(/~/g, '~0').replace(/\//g, '~1');
+}
 /**
-  `RSVP.race` allows you to watch a series of promises and act as soon as the
-  first promise given to the `promises` argument fulfills or rejects.
-
-  Example:
-
-  ```javascript
-  var promise1 = new RSVP.Promise(function(resolve, reject){
-    setTimeout(function(){
-      resolve("promise 1");
-    }, 200);
-  });
-
-  var promise2 = new RSVP.Promise(function(resolve, reject){
-    setTimeout(function(){
-      resolve("promise 2");
-    }, 100);
-  });
-
-  RSVP.race([promise1, promise2]).then(function(result){
-    // result === "promise 2" because it was resolved before promise1
-    // was resolved.
-  });
-  ```
-
-  `RSVP.race` is deterministic in that only the state of the first completed
-  promise matters. For example, even if other promises given to the `promises`
-  array argument are resolved, but the first completed promise has become
-  rejected before the other promises became fulfilled, the returned promise
-  will become rejected:
-
-  ```javascript
-  var promise1 = new RSVP.Promise(function(resolve, reject){
-    setTimeout(function(){
-      resolve("promise 1");
-    }, 200);
-  });
-
-  var promise2 = new RSVP.Promise(function(resolve, reject){
-    setTimeout(function(){
-      reject(new Error("promise 2"));
-    }, 100);
-  });
-
-  RSVP.race([promise1, promise2]).then(function(result){
-    // Code here never runs because there are rejected promises!
-  }, function(reason){
-    // reason.message === "promise2" because promise 2 became rejected before
-    // promise 1 became fulfilled
-  });
-  ```
-
-  @method race
-  @for RSVP
-  @param {Array} promises array of promises to observe
-  @param {String} label optional string for describing the promise returned.
-  Useful for tooling.
-  @return {Promise} a promise that becomes fulfilled with the value the first
-  completed promises is resolved with if the first completed promise was
-  fulfilled, or rejected with the reason that the first completed promise
-  was rejected with.
+JSON Pointer representation
 */
-function race(promises) {
-  /*jshint validthis:true */
-  var Promise = this;
-
-  if (!isArray$2(promises)) {
-    throw new TypeError('You must pass an array to race.');
-  }
-  return new Promise(function(resolve, reject) {
-    var promise;
-
-    for (var i = 0; i < promises.length; i++) {
-      promise = promises[i];
-
-      if (promise && typeof promise.then === 'function') {
-        promise.then(resolve, reject);
-      } else {
-        resolve(promise);
-      }
+var Pointer = /** @class */ (function () {
+    function Pointer(tokens) {
+        if (tokens === void 0) { tokens = ['']; }
+        this.tokens = tokens;
     }
-  });
-}
+    /**
+    `path` *must* be a properly escaped string.
+    */
+    Pointer.fromJSON = function (path$$1) {
+        var tokens = path$$1.split('/').map(unescape);
+        if (tokens[0] !== '')
+            { throw new Error("Invalid JSON Pointer: " + path$$1); }
+        return new Pointer(tokens);
+    };
+    Pointer.prototype.toString = function () {
+        return this.tokens.map(escape).join('/');
+    };
+    /**
+    Returns an object with 'parent', 'key', and 'value' properties.
+    In the special case that this Pointer's path == "",
+    this object will be {parent: null, key: '', value: object}.
+    Otherwise, parent and key will have the property such that parent[key] == value.
+    */
+    Pointer.prototype.evaluate = function (object) {
+        var parent = null;
+        var key = '';
+        var value = object;
+        for (var i = 1, l = this.tokens.length; i < l; i++) {
+            parent = value;
+            key = this.tokens[i];
+            // not sure if this the best way to handle non-existant paths...
+            value = (parent || {})[key];
+        }
+        return { parent: parent, key: key, value: value };
+    };
+    Pointer.prototype.get = function (object) {
+        return this.evaluate(object).value;
+    };
+    Pointer.prototype.set = function (object, value) {
+        var cursor = object;
+        for (var i = 1, l = this.tokens.length - 1, token = this.tokens[i]; i < l; i++) {
+            // not sure if this the best way to handle non-existant paths...
+            cursor = (cursor || {})[token];
+        }
+        if (cursor) {
+            cursor[this.tokens[this.tokens.length - 1]] = value;
+        }
+    };
+    Pointer.prototype.push = function (token) {
+        // mutable
+        this.tokens.push(token);
+    };
+    /**
+    `token` should be a String. It'll be coerced to one anyway.
+  
+    immutable (shallowly)
+    */
+    Pointer.prototype.add = function (token) {
+        var tokens = this.tokens.concat(String(token));
+        return new Pointer(tokens);
+    };
+    return Pointer;
+}());
+exports.Pointer = Pointer;
+});
 
-var race_2 = race;
+unwrapExports(pointer);
+var pointer_1 = pointer.Pointer;
 
-var race_1 = {
-	race: race_2
-};
-
-function resolve(value) {
-  /*jshint validthis:true */
-  if (value && typeof value === 'object' && value.constructor === this) {
-    return value;
-  }
-
-  var Promise = this;
-
-  return new Promise(function(resolve) {
-    resolve(value);
-  });
-}
-
-var resolve_2 = resolve;
-
-var resolve_1 = {
-	resolve: resolve_2
-};
-
+var util = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var hasOwnProperty = Object.prototype.hasOwnProperty;
 /**
-  `RSVP.reject` returns a promise that will become rejected with the passed
-  `reason`. `RSVP.reject` is essentially shorthand for the following:
+Recursively copy a value.
 
-  ```javascript
-  var promise = new RSVP.Promise(function(resolve, reject){
-    reject(new Error('WHOOPS'));
-  });
-
-  promise.then(function(value){
-    // Code here doesn't run because the promise is rejected!
-  }, function(reason){
-    // reason.message === 'WHOOPS'
-  });
-  ```
-
-  Instead of writing the above, your code now simply becomes the following:
-
-  ```javascript
-  var promise = RSVP.reject(new Error('WHOOPS'));
-
-  promise.then(function(value){
-    // Code here doesn't run because the promise is rejected!
-  }, function(reason){
-    // reason.message === 'WHOOPS'
-  });
-  ```
-
-  @method reject
-  @for RSVP
-  @param {Any} reason value that the returned promise will be rejected with.
-  @param {String} label optional string for identifying the returned promise.
-  Useful for tooling.
-  @return {Promise} a promise that will become rejected with the given
-  `reason`.
+@param source - should be a JavaScript primitive, Array, or (plain old) Object.
+@returns copy of source where every Array and Object have been recursively
+         reconstructed from their constituent elements
 */
-function reject(reason) {
-  /*jshint validthis:true */
-  var Promise = this;
-
-  return new Promise(function (resolve, reject) {
-    reject(reason);
-  });
-}
-
-var reject_2 = reject;
-
-var reject_1 = {
-	reject: reject_2
-};
-
-var browserGlobal = (typeof window !== 'undefined') ? window : {};
-var BrowserMutationObserver = browserGlobal.MutationObserver || browserGlobal.WebKitMutationObserver;
-var local = (typeof commonjsGlobal !== 'undefined') ? commonjsGlobal : (commonjsGlobal === undefined? window:commonjsGlobal);
-
-// node
-function useNextTick() {
-  return function() {
-    process.nextTick(flush);
-  };
-}
-
-function useMutationObserver() {
-  var iterations = 0;
-  var observer = new BrowserMutationObserver(flush);
-  var node = document.createTextNode('');
-  observer.observe(node, { characterData: true });
-
-  return function() {
-    node.data = (iterations = ++iterations % 2);
-  };
-}
-
-function useSetTimeout() {
-  return function() {
-    local.setTimeout(flush, 1);
-  };
-}
-
-var queue = [];
-function flush() {
-  for (var i = 0; i < queue.length; i++) {
-    var tuple = queue[i];
-    var callback = tuple[0], arg = tuple[1];
-    callback(arg);
-  }
-  queue = [];
-}
-
-var scheduleFlush;
-
-// Decide what async method to use to triggering processing of queued callbacks:
-if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
-  scheduleFlush = useNextTick();
-} else if (BrowserMutationObserver) {
-  scheduleFlush = useMutationObserver();
-} else {
-  scheduleFlush = useSetTimeout();
-}
-
-function asap(callback, arg) {
-  var length = queue.push([callback, arg]);
-  if (length === 1) {
-    // If length is 1, that means that we need to schedule an async flush.
-    // If additional callbacks are queued before the queue is flushed, they
-    // will be processed by this flush that we are scheduling.
-    scheduleFlush();
-  }
-}
-
-var asap_2 = asap;
-
-var asap_1 = {
-	asap: asap_2
-};
-
-var config$1 = config_1.config;
-var objectOrFunction$1 = utils.objectOrFunction;
-var isFunction$2 = utils.isFunction;
-var all$1 = all_1.all;
-var race$1 = race_1.race;
-var staticResolve = resolve_1.resolve;
-var staticReject = reject_1.reject;
-var asap$1 = asap_1.asap;
-
-config$1.async = asap$1; // default async is asap;
-
-function Promise$1(resolver) {
-  if (!isFunction$2(resolver)) {
-    throw new TypeError('You must pass a resolver function as the first argument to the promise constructor');
-  }
-
-  if (!(this instanceof Promise$1)) {
-    throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
-  }
-
-  this._subscribers = [];
-
-  invokeResolver(resolver, this);
-}
-
-function invokeResolver(resolver, promise) {
-  function resolvePromise(value) {
-    resolve$1(promise, value);
-  }
-
-  function rejectPromise(reason) {
-    reject$1(promise, reason);
-  }
-
-  try {
-    resolver(resolvePromise, rejectPromise);
-  } catch(e) {
-    rejectPromise(e);
-  }
-}
-
-function invokeCallback(settled, promise, callback, detail) {
-  var hasCallback = isFunction$2(callback),
-      value, error, succeeded, failed;
-
-  if (hasCallback) {
-    try {
-      value = callback(detail);
-      succeeded = true;
-    } catch(e) {
-      failed = true;
-      error = e;
+function clone(source) {
+    // loose-equality checking for null is faster than strict checking for each of null/undefined/true/false
+    // checking null first, then calling typeof, is faster than vice-versa
+    if (source == null || typeof source != 'object') {
+        // short-circuiting is faster than a single return
+        return source;
     }
-  } else {
-    value = detail;
-    succeeded = true;
-  }
-
-  if (handleThenable(promise, value)) {
-    return;
-  } else if (hasCallback && succeeded) {
-    resolve$1(promise, value);
-  } else if (failed) {
-    reject$1(promise, error);
-  } else if (settled === FULFILLED) {
-    resolve$1(promise, value);
-  } else if (settled === REJECTED) {
-    reject$1(promise, value);
-  }
-}
-
-var PENDING   = void 0;
-var SEALED    = 0;
-var FULFILLED = 1;
-var REJECTED  = 2;
-
-function subscribe(parent, child, onFulfillment, onRejection) {
-  var subscribers = parent._subscribers;
-  var length = subscribers.length;
-
-  subscribers[length] = child;
-  subscribers[length + FULFILLED] = onFulfillment;
-  subscribers[length + REJECTED]  = onRejection;
-}
-
-function publish(promise, settled) {
-  var child, callback, subscribers = promise._subscribers, detail = promise._detail;
-
-  for (var i = 0; i < subscribers.length; i += 3) {
-    child = subscribers[i];
-    callback = subscribers[i + settled];
-
-    invokeCallback(settled, child, callback, detail);
-  }
-
-  promise._subscribers = null;
-}
-
-Promise$1.prototype = {
-  constructor: Promise$1,
-
-  _state: undefined,
-  _detail: undefined,
-  _subscribers: undefined,
-
-  then: function(onFulfillment, onRejection) {
-    var promise = this;
-
-    var thenPromise = new this.constructor(function() {});
-
-    if (this._state) {
-      var callbacks = arguments;
-      config$1.async(function invokePromiseCallback() {
-        invokeCallback(promise._state, thenPromise, callbacks[promise._state - 1], promise._detail);
-      });
-    } else {
-      subscribe(this, thenPromise, onFulfillment, onRejection);
+    // x.constructor == Array is the fastest way to check if x is an Array
+    if (source.constructor == Array) {
+        // construction via imperative for-loop is faster than source.map(arrayVsObject)
+        var length_1 = source.length;
+        // setting the Array length during construction is faster than just `[]` or `new Array()`
+        var arrayTarget = new Array(length_1);
+        for (var i = 0; i < length_1; i++) {
+            arrayTarget[i] = clone(source[i]);
+        }
+        return arrayTarget;
     }
-
-    return thenPromise;
-  },
-
-  'catch': function(onRejection) {
-    return this.then(null, onRejection);
-  }
-};
-
-Promise$1.all = all$1;
-Promise$1.race = race$1;
-Promise$1.resolve = staticResolve;
-Promise$1.reject = staticReject;
-
-function handleThenable(promise, value) {
-  var then = null,
-  resolved;
-
-  try {
-    if (promise === value) {
-      throw new TypeError("A promises callback cannot return that same promise.");
+    // Object
+    var objectTarget = {};
+    // declaring the variable (with const) inside the loop is faster
+    for (var key in source) {
+        // hasOwnProperty costs a bit of performance, but it's semantically necessary
+        // using a global helper is MUCH faster than calling source.hasOwnProperty(key)
+        if (hasOwnProperty.call(source, key)) {
+            objectTarget[key] = clone(source[key]);
+        }
     }
+    return objectTarget;
+}
+exports.clone = clone;
+});
 
-    if (objectOrFunction$1(value)) {
-      then = value.then;
+unwrapExports(util);
+var util_1 = util.clone;
 
-      if (isFunction$2(then)) {
-        then.call(value, function(val) {
-          if (resolved) { return true; }
-          resolved = true;
-
-          if (value !== val) {
-            resolve$1(promise, val);
-          } else {
-            fulfill(promise, val);
-          }
-        }, function(val) {
-          if (resolved) { return true; }
-          resolved = true;
-
-          reject$1(promise, val);
-        });
-
-        return true;
-      }
+var equal = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+function objectType(object) {
+    if (object === undefined) {
+        return 'undefined';
     }
-  } catch (error) {
-    if (resolved) { return true; }
-    reject$1(promise, error);
+    if (object === null) {
+        return 'null';
+    }
+    if (Array.isArray(object)) {
+        return 'array';
+    }
+    return typeof object;
+}
+exports.objectType = objectType;
+/**
+Evaluate `left === right`, treating `left` and `right` as ordered lists.
+
+@returns true iff `left` and `right` have identical lengths, and every element
+         of `left` is equal to the corresponding element of `right`. Equality is
+         determined recursivly, via `compare`.
+*/
+function compareArrays(left, right) {
+    var length = left.length;
+    if (length !== right.length) {
+        return false;
+    }
+    for (var i = 0; i < length; i++) {
+        if (!compare(left[i], right[i])) {
+            return false;
+        }
+    }
     return true;
-  }
-
-  return false;
 }
+/**
+Evaluate `left === right`, treating `left` and `right` as property maps.
 
-function resolve$1(promise, value) {
-  if (promise === value) {
-    fulfill(promise, value);
-  } else if (!handleThenable(promise, value)) {
-    fulfill(promise, value);
-  }
-}
-
-function fulfill(promise, value) {
-  if (promise._state !== PENDING) { return; }
-  promise._state = SEALED;
-  promise._detail = value;
-
-  config$1.async(publishFulfillment, promise);
-}
-
-function reject$1(promise, reason) {
-  if (promise._state !== PENDING) { return; }
-  promise._state = SEALED;
-  promise._detail = reason;
-
-  config$1.async(publishRejection, promise);
-}
-
-function publishFulfillment(promise) {
-  publish(promise, promise._state = FULFILLED);
-}
-
-function publishRejection(promise) {
-  publish(promise, promise._state = REJECTED);
-}
-
-var Promise_1 = Promise$1;
-
-var promise = {
-	Promise: Promise_1
-};
-
-/*global self*/
-var RSVPPromise = promise.Promise;
-var isFunction$3 = utils.isFunction;
-
-function polyfill() {
-  var local;
-
-  if (typeof commonjsGlobal !== 'undefined') {
-    local = commonjsGlobal;
-  } else if (typeof window !== 'undefined' && window.document) {
-    local = window;
-  } else {
-    local = self;
-  }
-
-  var es6PromiseSupport = 
-    "Promise" in local &&
-    // Some of these methods are missing from
-    // Firefox/Chrome experimental implementations
-    "resolve" in local.Promise &&
-    "reject" in local.Promise &&
-    "all" in local.Promise &&
-    "race" in local.Promise &&
-    // Older version of the spec had a resolver object
-    // as the arg rather than a function
-    (function() {
-      var resolve;
-      new local.Promise(function(r) { resolve = r; });
-      return isFunction$3(resolve);
-    }());
-
-  if (!es6PromiseSupport) {
-    local.Promise = RSVPPromise;
-  }
-}
-
-var polyfill_2 = polyfill;
-
-var polyfill_1 = {
-	polyfill: polyfill_2
-};
-
-var Promise$2 = promise.Promise;
-var polyfill$1 = polyfill_1.polyfill;
-var Promise_1$1 = Promise$2;
-var polyfill_1$1 = polyfill$1;
-
-var main = {
-	Promise: Promise_1$1,
-	polyfill: polyfill_1$1
-};
-
-var minimatch = createCommonjsModule(function (module) {
-(function (require, exports, module, platform) {
-
-if (module) { module.exports = minimatch; }
-else { exports.minimatch = minimatch; }
-
-if (!require) {
-  require = function (id) {
-    switch (id) {
-      case "sigmund": return function sigmund (obj) {
-        return JSON.stringify(obj)
-      }
-      case "path": return { basename: function (f) {
-        f = f.split(/[\/\\]/);
-        var e = f.pop();
-        if (!e) { e = f.pop(); }
-        return e
-      }}
-      case "lru-cache": return function LRUCache () {
-        // not quite an LRU, but still space-limited.
-        var cache = {};
-        var cnt = 0;
-        this.set = function (k, v) {
-          cnt ++;
-          if (cnt >= 100) { cache = {}; }
-          cache[k] = v;
-        };
-        this.get = function (k) { return cache[k] };
-      }
+@returns true iff every property in `left` has a value equal to the value of the
+         corresponding property in `right`, and vice-versa, stopping as soon as
+         possible. Equality is determined recursivly, via `compare`.
+*/
+function compareObjects(left, right) {
+    var left_keys = Object.keys(left);
+    var right_keys = Object.keys(right);
+    var length = left_keys.length;
+    // quick exit if the number of keys don't match up
+    if (length !== right_keys.length) {
+        return false;
     }
-  };
-}
-
-minimatch.Minimatch = Minimatch;
-
-var LRU = require("lru-cache")
-  , cache = minimatch.cache = new LRU({max: 100})
-  , GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {}
-  , sigmund = require("sigmund");
-
-var path$$1 = require("path")
-  // any single thing other than /
-  // don't need to escape / when using new RegExp()
-  , qmark = "[^/]"
-
-  // * => any number of characters
-  , star = qmark + "*?"
-
-  // ** when dots are allowed.  Anything goes, except .. and .
-  // not (^ or / followed by one or two dots followed by $ or /),
-  // followed by anything, any number of times.
-  , twoStarDot = "(?:(?!(?:\\\/|^)(?:\\.{1,2})($|\\\/)).)*?"
-
-  // not a ^ or / followed by a dot,
-  // followed by anything, any number of times.
-  , twoStarNoDot = "(?:(?!(?:\\\/|^)\\.).)*?"
-
-  // characters that need to be escaped in RegExp.
-  , reSpecials = charSet("().*{}+?[]^$\\!");
-
-// "abc" -> { a:true, b:true, c:true }
-function charSet (s) {
-  return s.split("").reduce(function (set, c) {
-    set[c] = true;
-    return set
-  }, {})
-}
-
-// normalizes slashes.
-var slashSplit = /\/+/;
-
-minimatch.filter = filter;
-function filter (pattern, options) {
-  options = options || {};
-  return function (p, i, list) {
-    return minimatch(p, pattern, options)
-  }
-}
-
-function ext (a, b) {
-  a = a || {};
-  b = b || {};
-  var t = {};
-  Object.keys(b).forEach(function (k) {
-    t[k] = b[k];
-  });
-  Object.keys(a).forEach(function (k) {
-    t[k] = a[k];
-  });
-  return t
-}
-
-minimatch.defaults = function (def) {
-  if (!def || !Object.keys(def).length) { return minimatch }
-
-  var orig = minimatch;
-
-  var m = function minimatch (p, pattern, options) {
-    return orig.minimatch(p, pattern, ext(def, options))
-  };
-
-  m.Minimatch = function Minimatch (pattern, options) {
-    return new orig.Minimatch(pattern, ext(def, options))
-  };
-
-  return m
-};
-
-Minimatch.defaults = function (def) {
-  if (!def || !Object.keys(def).length) { return Minimatch }
-  return minimatch.defaults(def).Minimatch
-};
-
-
-function minimatch (p, pattern, options) {
-  if (typeof pattern !== "string") {
-    throw new TypeError("glob pattern string required")
-  }
-
-  if (!options) { options = {}; }
-
-  // shortcut: comments match nothing.
-  if (!options.nocomment && pattern.charAt(0) === "#") {
-    return false
-  }
-
-  // "" only matches ""
-  if (pattern.trim() === "") { return p === "" }
-
-  return new Minimatch(pattern, options).match(p)
-}
-
-function Minimatch (pattern, options) {
-  if (!(this instanceof Minimatch)) {
-    return new Minimatch(pattern, options, cache)
-  }
-
-  if (typeof pattern !== "string") {
-    throw new TypeError("glob pattern string required")
-  }
-
-  if (!options) { options = {}; }
-  pattern = pattern.trim();
-
-  // windows: need to use /, not \
-  // On other platforms, \ is a valid (albeit bad) filename char.
-  if (platform === "win32") {
-    pattern = pattern.split("\\").join("/");
-  }
-
-  // lru storage.
-  // these things aren't particularly big, but walking down the string
-  // and turning it into a regexp can get pretty costly.
-  var cacheKey = pattern + "\n" + sigmund(options);
-  var cached = minimatch.cache.get(cacheKey);
-  if (cached) { return cached }
-  minimatch.cache.set(cacheKey, this);
-
-  this.options = options;
-  this.set = [];
-  this.pattern = pattern;
-  this.regexp = null;
-  this.negate = false;
-  this.comment = false;
-  this.empty = false;
-
-  // make the set of regexps etc.
-  this.make();
-}
-
-Minimatch.prototype.debug = function() {};
-
-Minimatch.prototype.make = make;
-function make () {
-  // don't do it more than once.
-  if (this._made) { return }
-
-  var pattern = this.pattern;
-  var options = this.options;
-
-  // empty patterns and comments match nothing.
-  if (!options.nocomment && pattern.charAt(0) === "#") {
-    this.comment = true;
-    return
-  }
-  if (!pattern) {
-    this.empty = true;
-    return
-  }
-
-  // step 1: figure out negation, etc.
-  this.parseNegate();
-
-  // step 2: expand braces
-  var set = this.globSet = this.braceExpand();
-
-  if (options.debug) { this.debug = console.error; }
-
-  this.debug(this.pattern, set);
-
-  // step 3: now we have a set, so turn each one into a series of path-portion
-  // matching patterns.
-  // These will be regexps, except in the case of "**", which is
-  // set to the GLOBSTAR object for globstar behavior,
-  // and will not contain any / characters
-  set = this.globParts = set.map(function (s) {
-    return s.split(slashSplit)
-  });
-
-  this.debug(this.pattern, set);
-
-  // glob --> regexps
-  set = set.map(function (s, si, set) {
-    return s.map(this.parse, this)
-  }, this);
-
-  this.debug(this.pattern, set);
-
-  // filter out everything that didn't compile properly.
-  set = set.filter(function (s) {
-    return -1 === s.indexOf(false)
-  });
-
-  this.debug(this.pattern, set);
-
-  this.set = set;
-}
-
-Minimatch.prototype.parseNegate = parseNegate;
-function parseNegate () {
-  var pattern = this.pattern
-    , negate = false
-    , options = this.options
-    , negateOffset = 0;
-
-  if (options.nonegate) { return }
-
-  for ( var i = 0, l = pattern.length
-      ; i < l && pattern.charAt(i) === "!"
-      ; i ++) {
-    negate = !negate;
-    negateOffset ++;
-  }
-
-  if (negateOffset) { this.pattern = pattern.substr(negateOffset); }
-  this.negate = negate;
-}
-
-// Brace expansion:
-// a{b,c}d -> abd acd
-// a{b,}c -> abc ac
-// a{0..3}d -> a0d a1d a2d a3d
-// a{b,c{d,e}f}g -> abg acdfg acefg
-// a{b,c}d{e,f}g -> abdeg acdeg abdeg abdfg
-//
-// Invalid sets are not expanded.
-// a{2..}b -> a{2..}b
-// a{b}c -> a{b}c
-minimatch.braceExpand = function (pattern, options) {
-  return new Minimatch(pattern, options).braceExpand()
-};
-
-Minimatch.prototype.braceExpand = braceExpand;
-function braceExpand (pattern, options) {
-  options = options || this.options;
-  pattern = typeof pattern === "undefined"
-    ? this.pattern : pattern;
-
-  if (typeof pattern === "undefined") {
-    throw new Error("undefined pattern")
-  }
-
-  if (options.nobrace ||
-      !pattern.match(/\{.*\}/)) {
-    // shortcut. no need to expand.
-    return [pattern]
-  }
-
-  var escaping = false;
-
-  // examples and comments refer to this crazy pattern:
-  // a{b,c{d,e},{f,g}h}x{y,z}
-  // expected:
-  // abxy
-  // abxz
-  // acdxy
-  // acdxz
-  // acexy
-  // acexz
-  // afhxy
-  // afhxz
-  // aghxy
-  // aghxz
-
-  // everything before the first \{ is just a prefix.
-  // So, we pluck that off, and work with the rest,
-  // and then prepend it to everything we find.
-  if (pattern.charAt(0) !== "{") {
-    this.debug(pattern);
-    var prefix = null;
-    for (var i = 0, l = pattern.length; i < l; i ++) {
-      var c = pattern.charAt(i);
-      this.debug(i, c);
-      if (c === "\\") {
-        escaping = !escaping;
-      } else if (c === "{" && !escaping) {
-        prefix = pattern.substr(0, i);
-        break
-      }
+    // we don't know for sure that Set(left_keys) is equal to Set(right_keys),
+    // much less that their values in left and right are equal, but if right
+    // contains each key in left, we know it can't have any additional keys
+    for (var i = 0; i < length; i++) {
+        var key = left_keys[i];
+        if (!hasOwnProperty.call(right, key) || !compare(left[key], right[key])) {
+            return false;
+        }
     }
+    return true;
+}
+/**
+`compare()` returns true if `left` and `right` are materially equal
+(i.e., would produce equivalent JSON), false otherwise.
 
-    // actually no sets, all { were escaped.
-    if (prefix === null) {
-      this.debug("no sets");
-      return [pattern]
+> Here, "equal" means that the value at the target location and the
+> value conveyed by "value" are of the same JSON type, and that they
+> are considered equal by the following rules for that type:
+> o  strings: are considered equal if they contain the same number of
+>    Unicode characters and their code points are byte-by-byte equal.
+> o  numbers: are considered equal if their values are numerically
+>    equal.
+> o  arrays: are considered equal if they contain the same number of
+>    values, and if each value can be considered equal to the value at
+>    the corresponding position in the other array, using this list of
+>    type-specific rules.
+> o  objects: are considered equal if they contain the same number of
+>    members, and if each member can be considered equal to a member in
+>    the other object, by comparing their keys (as strings) and their
+>    values (using this list of type-specific rules).
+> o  literals (false, true, and null): are considered equal if they are
+>    the same.
+*/
+function compare(left, right) {
+    // strict equality handles literals, numbers, and strings (a sufficient but not necessary cause)
+    if (left === right) {
+        return true;
     }
-
-   var tail = braceExpand.call(this, pattern.substr(i), options);
-    return tail.map(function (t) {
-      return prefix + t
-    })
-  }
-
-  // now we have something like:
-  // {b,c{d,e},{f,g}h}x{y,z}
-  // walk through the set, expanding each part, until
-  // the set ends.  then, we'll expand the suffix.
-  // If the set only has a single member, then'll put the {} back
-
-  // first, handle numeric sets, since they're easier
-  var numset = pattern.match(/^\{(-?[0-9]+)\.\.(-?[0-9]+)\}/);
-  if (numset) {
-    this.debug("numset", numset[1], numset[2]);
-    var suf = braceExpand.call(this, pattern.substr(numset[0].length), options)
-      , start = +numset[1]
-      , end = +numset[2]
-      , inc = start > end ? -1 : 1
-      , set = [];
-    for (var i = start; i != (end + inc); i += inc) {
-      // append all the suffixes
-      for (var ii = 0, ll = suf.length; ii < ll; ii ++) {
-        set.push(i + suf[ii]);
-      }
+    var left_type = objectType(left);
+    var right_type = objectType(right);
+    // check arrays
+    if (left_type == 'array' && right_type == 'array') {
+        return compareArrays(left, right);
     }
-    return set
-  }
+    // check objects
+    if (left_type == 'object' && right_type == 'object') {
+        return compareObjects(left, right);
+    }
+    // mismatched arrays & objects, etc., are always inequal
+    return false;
+}
+exports.compare = compare;
+});
 
-  // ok, walk through the set
-  // We hope, somewhat optimistically, that there
-  // will be a } at the end.
-  // If the closing brace isn't found, then the pattern is
-  // interpreted as braceExpand("\\" + pattern) so that
-  // the leading \{ will be interpreted literally.
-  var i = 1 // skip the \{
-    , depth = 1
-    , set = []
-    , member = ""
-    , escaping = false;
+unwrapExports(equal);
+var equal_1 = equal.objectType;
+var equal_2 = equal.compare;
 
-  function addMember () {
-    set.push(member);
-    member = "";
-  }
-
-  this.debug("Entering for");
-  FOR: for (i = 1, l = pattern.length; i < l; i ++) {
-    var c = pattern.charAt(i);
-    this.debug("", i, c);
-
-    if (escaping) {
-      escaping = false;
-      member += "\\" + c;
-    } else {
-      switch (c) {
-        case "\\":
-          escaping = true;
-          continue
-
-        case "{":
-          depth ++;
-          member += "{";
-          continue
-
-        case "}":
-          depth --;
-          // if this closes the actual set, then we're done
-          if (depth === 0) {
-            addMember();
-            // pluck off the close-brace
-            i ++;
-            break FOR
-          } else {
-            member += c;
-            continue
-          }
-
-        case ",":
-          if (depth === 1) {
-            addMember();
-          } else {
-            member += c;
-          }
-          continue
-
-        default:
-          member += c;
-          continue
-      } // switch
-    } // else
-  } // for
-
-  // now we've either finished the set, and the suffix is
-  // pattern.substr(i), or we have *not* closed the set,
-  // and need to escape the leading brace
-  if (depth !== 0) {
-    this.debug("didn't close", pattern);
-    return braceExpand.call(this, "\\" + pattern, options)
-  }
-
-  // x{y,z} -> ["xy", "xz"]
-  this.debug("set", set);
-  this.debug("suffix", pattern.substr(i));
-  var suf = braceExpand.call(this, pattern.substr(i), options);
-  // ["b", "c{d,e}","{f,g}h"] ->
-  //   [["b"], ["cd", "ce"], ["fh", "gh"]]
-  var addBraces = set.length === 1;
-  this.debug("set pre-expanded", set);
-  set = set.map(function (p) {
-    return braceExpand.call(this, p, options)
-  }, this);
-  this.debug("set expanded", set);
+var patch$2 = createCommonjsModule(function (module, exports) {
+var __extends = (commonjsGlobal && commonjsGlobal.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
 
 
-  // [["b"], ["cd", "ce"], ["fh", "gh"]] ->
-  //   ["b", "cd", "ce", "fh", "gh"]
-  set = set.reduce(function (l, r) {
-    return l.concat(r)
-  });
 
-  if (addBraces) {
-    set = set.map(function (s) {
-      return "{" + s + "}"
+var MissingError = /** @class */ (function (_super) {
+    __extends(MissingError, _super);
+    function MissingError(path$$1) {
+        var _this = _super.call(this, "Value required at path: " + path$$1) || this;
+        _this.path = path$$1;
+        _this.name = 'MissingError';
+        return _this;
+    }
+    return MissingError;
+}(Error));
+exports.MissingError = MissingError;
+var TestError = /** @class */ (function (_super) {
+    __extends(TestError, _super);
+    function TestError(actual, expected) {
+        var _this = _super.call(this, "Test failed: " + actual + " != " + expected) || this;
+        _this.actual = actual;
+        _this.expected = expected;
+        _this.name = 'TestError';
+        _this.actual = actual;
+        _this.expected = expected;
+        return _this;
+    }
+    return TestError;
+}(Error));
+exports.TestError = TestError;
+function _add(object, key, value) {
+    if (Array.isArray(object)) {
+        // `key` must be an index
+        if (key == '-') {
+            object.push(value);
+        }
+        else {
+            var index = parseInt(key, 10);
+            object.splice(index, 0, value);
+        }
+    }
+    else {
+        object[key] = value;
+    }
+}
+function _remove(object, key) {
+    if (Array.isArray(object)) {
+        // '-' syntax doesn't make sense when removing
+        var index = parseInt(key, 10);
+        object.splice(index, 1);
+    }
+    else {
+        // not sure what the proper behavior is when path = ''
+        delete object[key];
+    }
+}
+/**
+>  o  If the target location specifies an array index, a new value is
+>     inserted into the array at the specified index.
+>  o  If the target location specifies an object member that does not
+>     already exist, a new member is added to the object.
+>  o  If the target location specifies an object member that does exist,
+>     that member's value is replaced.
+*/
+function add(object, operation) {
+    var endpoint = pointer.Pointer.fromJSON(operation.path).evaluate(object);
+    // it's not exactly a "MissingError" in the same way that `remove` is -- more like a MissingParent, or something
+    if (endpoint.parent === undefined) {
+        return new MissingError(operation.path);
+    }
+    _add(endpoint.parent, endpoint.key, util.clone(operation.value));
+    return null;
+}
+exports.add = add;
+/**
+> The "remove" operation removes the value at the target location.
+> The target location MUST exist for the operation to be successful.
+*/
+function remove(object, operation) {
+    // endpoint has parent, key, and value properties
+    var endpoint = pointer.Pointer.fromJSON(operation.path).evaluate(object);
+    if (endpoint.value === undefined) {
+        return new MissingError(operation.path);
+    }
+    // not sure what the proper behavior is when path = ''
+    _remove(endpoint.parent, endpoint.key);
+    return null;
+}
+exports.remove = remove;
+/**
+> The "replace" operation replaces the value at the target location
+> with a new value.  The operation object MUST contain a "value" member
+> whose content specifies the replacement value.
+> The target location MUST exist for the operation to be successful.
+
+> This operation is functionally identical to a "remove" operation for
+> a value, followed immediately by an "add" operation at the same
+> location with the replacement value.
+
+Even more simply, it's like the add operation with an existence check.
+*/
+function replace(object, operation) {
+    var endpoint = pointer.Pointer.fromJSON(operation.path).evaluate(object);
+    if (endpoint.parent === null) {
+        return new MissingError(operation.path);
+    }
+    // this existence check treats arrays as a special case
+    if (Array.isArray(endpoint.parent)) {
+        if (parseInt(endpoint.key, 10) >= endpoint.parent.length) {
+            return new MissingError(operation.path);
+        }
+    }
+    else if (endpoint.value === undefined) {
+        return new MissingError(operation.path);
+    }
+    endpoint.parent[endpoint.key] = operation.value;
+    return null;
+}
+exports.replace = replace;
+/**
+> The "move" operation removes the value at a specified location and
+> adds it to the target location.
+> The operation object MUST contain a "from" member, which is a string
+> containing a JSON Pointer value that references the location in the
+> target document to move the value from.
+> This operation is functionally identical to a "remove" operation on
+> the "from" location, followed immediately by an "add" operation at
+> the target location with the value that was just removed.
+
+> The "from" location MUST NOT be a proper prefix of the "path"
+> location; i.e., a location cannot be moved into one of its children.
+
+TODO: throw if the check described in the previous paragraph fails.
+*/
+function move(object, operation) {
+    var from_endpoint = pointer.Pointer.fromJSON(operation.from).evaluate(object);
+    if (from_endpoint.value === undefined) {
+        return new MissingError(operation.from);
+    }
+    var endpoint = pointer.Pointer.fromJSON(operation.path).evaluate(object);
+    if (endpoint.parent === undefined) {
+        return new MissingError(operation.path);
+    }
+    _remove(from_endpoint.parent, from_endpoint.key);
+    _add(endpoint.parent, endpoint.key, from_endpoint.value);
+    return null;
+}
+exports.move = move;
+/**
+> The "copy" operation copies the value at a specified location to the
+> target location.
+> The operation object MUST contain a "from" member, which is a string
+> containing a JSON Pointer value that references the location in the
+> target document to copy the value from.
+> The "from" location MUST exist for the operation to be successful.
+
+> This operation is functionally identical to an "add" operation at the
+> target location using the value specified in the "from" member.
+
+Alternatively, it's like 'move' without the 'remove'.
+*/
+function copy(object, operation) {
+    var from_endpoint = pointer.Pointer.fromJSON(operation.from).evaluate(object);
+    if (from_endpoint.value === undefined) {
+        return new MissingError(operation.from);
+    }
+    var endpoint = pointer.Pointer.fromJSON(operation.path).evaluate(object);
+    if (endpoint.parent === undefined) {
+        return new MissingError(operation.path);
+    }
+    _add(endpoint.parent, endpoint.key, util.clone(from_endpoint.value));
+    return null;
+}
+exports.copy = copy;
+/**
+> The "test" operation tests that a value at the target location is
+> equal to a specified value.
+> The operation object MUST contain a "value" member that conveys the
+> value to be compared to the target location's value.
+> The target location MUST be equal to the "value" value for the
+> operation to be considered successful.
+*/
+function test(object, operation) {
+    var endpoint = pointer.Pointer.fromJSON(operation.path).evaluate(object);
+    var result = equal.compare(endpoint.value, operation.value);
+    if (!result) {
+        return new TestError(endpoint.value, operation.value);
+    }
+    return null;
+}
+exports.test = test;
+var InvalidOperationError = /** @class */ (function (_super) {
+    __extends(InvalidOperationError, _super);
+    function InvalidOperationError(operation) {
+        var _this = _super.call(this, "Invalid operation: " + operation.op) || this;
+        _this.operation = operation;
+        _this.name = 'InvalidOperationError';
+        return _this;
+    }
+    return InvalidOperationError;
+}(Error));
+exports.InvalidOperationError = InvalidOperationError;
+/**
+Switch on `operation.op`, applying the corresponding patch function for each
+case to `object`.
+*/
+function apply(object, operation) {
+    // not sure why TypeScript can't infer typesafety of:
+    //   {add, remove, replace, move, copy, test}[operation.op](object, operation)
+    // (seems like a bug)
+    switch (operation.op) {
+        case 'add': return add(object, operation);
+        case 'remove': return remove(object, operation);
+        case 'replace': return replace(object, operation);
+        case 'move': return move(object, operation);
+        case 'copy': return copy(object, operation);
+        case 'test': return test(object, operation);
+    }
+    return new InvalidOperationError(operation);
+}
+exports.apply = apply;
+});
+
+unwrapExports(patch$2);
+var patch_1 = patch$2.MissingError;
+var patch_2 = patch$2.TestError;
+var patch_3 = patch$2.add;
+var patch_4 = patch$2.remove;
+var patch_5 = patch$2.replace;
+var patch_6 = patch$2.move;
+var patch_7 = patch$2.copy;
+var patch_8 = patch$2.test;
+var patch_9 = patch$2.InvalidOperationError;
+var patch_10 = patch$2.apply;
+
+var diff = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+function isDestructive(_a) {
+    var op = _a.op;
+    return op === 'remove' || op === 'replace' || op === 'copy' || op === 'move';
+}
+exports.isDestructive = isDestructive;
+/**
+List the keys in `minuend` that are not in `subtrahend`.
+
+A key is only considered if it is both 1) an own-property (o.hasOwnProperty(k))
+of the object, and 2) has a value that is not undefined. This is to match JSON
+semantics, where JSON object serialization drops keys with undefined values.
+
+@param minuend Object of interest
+@param subtrahend Object of comparison
+@returns Array of keys that are in `minuend` but not in `subtrahend`.
+*/
+function subtract(minuend, subtrahend) {
+    // initialize empty object; we only care about the keys, the values can be anything
+    var obj = {};
+    // build up obj with all the properties of minuend
+    for (var add_key in minuend) {
+        if (hasOwnProperty.call(minuend, add_key) && minuend[add_key] !== undefined) {
+            obj[add_key] = 1;
+        }
+    }
+    // now delete all the properties of subtrahend from obj
+    // (deleting a missing key has no effect)
+    for (var del_key in subtrahend) {
+        if (hasOwnProperty.call(subtrahend, del_key) && subtrahend[del_key] !== undefined) {
+            delete obj[del_key];
+        }
+    }
+    // finally, extract whatever keys remain in obj
+    return Object.keys(obj);
+}
+exports.subtract = subtract;
+/**
+List the keys that shared by all `objects`.
+
+The semantics of what constitutes a "key" is described in {@link subtract}.
+
+@param objects Array of objects to compare
+@returns Array of keys that are in ("own-properties" of) every object in `objects`.
+*/
+function intersection(objects) {
+    var length = objects.length;
+    // prepare empty counter to keep track of how many objects each key occurred in
+    var counter = {};
+    // go through each object and increment the counter for each key in that object
+    for (var i = 0; i < length; i++) {
+        var object = objects[i];
+        for (var key in object) {
+            if (hasOwnProperty.call(object, key) && object[key] !== undefined) {
+                counter[key] = (counter[key] || 0) + 1;
+            }
+        }
+    }
+    // now delete all keys from the counter that were not seen in every object
+    for (var key in counter) {
+        if (counter[key] < length) {
+            delete counter[key];
+        }
+    }
+    // finally, extract whatever keys remain in the counter
+    return Object.keys(counter);
+}
+exports.intersection = intersection;
+function isArrayAdd(array_operation) {
+    return array_operation.op === 'add';
+}
+function isArrayRemove(array_operation) {
+    return array_operation.op === 'remove';
+}
+function appendArrayOperation(base, operation) {
+    return {
+        // the new operation must be pushed on the end
+        operations: base.operations.concat(operation),
+        cost: base.cost + 1,
+    };
+}
+/**
+Calculate the shortest sequence of operations to get from `input` to `output`,
+using a dynamic programming implementation of the Levenshtein distance algorithm.
+
+To get from the input ABC to the output AZ we could just delete all the input
+and say "insert A, insert Z" and be done with it. That's what we do if the
+input is empty. But we can be smarter.
+
+          output
+               A   Z
+               -   -
+          [0]  1   2
+input A |  1  [0]  1
+      B |  2  [1]  1
+      C |  3   2  [2]
+
+1) start at 0,0 (+0)
+2) keep A (+0)
+3) remove B (+1)
+4) replace C with Z (+1)
+
+If the `input` (source) is empty, they'll all be in the top row, resulting in an
+array of 'add' operations.
+If the `output` (target) is empty, everything will be in the left column,
+resulting in an array of 'remove' operations.
+
+@returns A list of add/remove/replace operations.
+*/
+function diffArrays(input, output, ptr, diff) {
+    if (diff === void 0) { diff = diffAny; }
+    // set up cost matrix (very simple initialization: just a map)
+    var memo = {
+        '0,0': { operations: [], cost: 0 },
+    };
+    /**
+    Calculate the cheapest sequence of operations required to get from
+    input.slice(0, i) to output.slice(0, j).
+    There may be other valid sequences with the same cost, but none cheaper.
+  
+    @param i The row in the layout above
+    @param j The column in the layout above
+    @returns An object containing a list of operations, along with the total cost
+             of applying them (+1 for each add/remove/replace operation)
+    */
+    function dist(i, j) {
+        // memoized
+        var memo_key = i + "," + j;
+        var memoized = memo[memo_key];
+        if (memoized === undefined) {
+            if (i > 0 && j > 0 && equal.compare(input[i - 1], output[j - 1])) {
+                // equal (no operations => no cost)
+                memoized = dist(i - 1, j - 1);
+            }
+            else {
+                var alternatives = [];
+                if (i > 0) {
+                    // NOT topmost row
+                    var remove_base = dist(i - 1, j);
+                    var remove_operation = {
+                        op: 'remove',
+                        index: i - 1,
+                    };
+                    alternatives.push(appendArrayOperation(remove_base, remove_operation));
+                }
+                if (j > 0) {
+                    // NOT leftmost column
+                    var add_base = dist(i, j - 1);
+                    var add_operation = {
+                        op: 'add',
+                        index: i - 1,
+                        value: output[j - 1],
+                    };
+                    alternatives.push(appendArrayOperation(add_base, add_operation));
+                }
+                if (i > 0 && j > 0) {
+                    // TABLE MIDDLE
+                    // supposing we replaced it, compute the rest of the costs:
+                    var replace_base = dist(i - 1, j - 1);
+                    // okay, the general plan is to replace it, but we can be smarter,
+                    // recursing into the structure and replacing only part of it if
+                    // possible, but to do so we'll need the original value
+                    var replace_operation = {
+                        op: 'replace',
+                        index: i - 1,
+                        original: input[i - 1],
+                        value: output[j - 1],
+                    };
+                    alternatives.push(appendArrayOperation(replace_base, replace_operation));
+                }
+                // the only other case, i === 0 && j === 0, has already been memoized
+                // the meat of the algorithm:
+                // sort by cost to find the lowest one (might be several ties for lowest)
+                // [4, 6, 7, 1, 2].sort((a, b) => a - b) -> [ 1, 2, 4, 6, 7 ]
+                var best = alternatives.sort(function (a, b) { return a.cost - b.cost; })[0];
+                memoized = best;
+            }
+            memo[memo_key] = memoized;
+        }
+        return memoized;
+    }
+    // handle weird objects masquerading as Arrays that don't have proper length
+    // properties by using 0 for everything but positive numbers
+    var input_length = (isNaN(input.length) || input.length <= 0) ? 0 : input.length;
+    var output_length = (isNaN(output.length) || output.length <= 0) ? 0 : output.length;
+    var array_operations = dist(input_length, output_length).operations;
+    var padded_operations = array_operations.reduce(function (_a, array_operation) {
+        var operations = _a[0], padding = _a[1];
+        if (isArrayAdd(array_operation)) {
+            var padded_index = array_operation.index + 1 + padding;
+            var index_token = padded_index < (input_length + padding) ? String(padded_index) : '-';
+            var operation = {
+                op: array_operation.op,
+                path: ptr.add(index_token).toString(),
+                value: array_operation.value,
+            };
+            // padding++ // maybe only if array_operation.index > -1 ?
+            return [operations.concat(operation), padding + 1];
+        }
+        else if (isArrayRemove(array_operation)) {
+            var operation = {
+                op: array_operation.op,
+                path: ptr.add(String(array_operation.index + padding)).toString(),
+            };
+            // padding--
+            return [operations.concat(operation), padding - 1];
+        }
+        else { // replace
+            var replace_ptr = ptr.add(String(array_operation.index + padding));
+            var replace_operations = diff(array_operation.original, array_operation.value, replace_ptr);
+            return [operations.concat.apply(operations, replace_operations), padding];
+        }
+    }, [[], 0])[0];
+    return padded_operations;
+}
+exports.diffArrays = diffArrays;
+function diffObjects(input, output, ptr, diff) {
+    if (diff === void 0) { diff = diffAny; }
+    // if a key is in input but not output -> remove it
+    var operations = [];
+    subtract(input, output).forEach(function (key) {
+        operations.push({ op: 'remove', path: ptr.add(key).toString() });
     });
-  }
-
-  // now attach the suffixes.
-  var ret = [];
-  for (var i = 0, l = set.length; i < l; i ++) {
-    for (var ii = 0, ll = suf.length; ii < ll; ii ++) {
-      ret.push(set[i] + suf[ii]);
-    }
-  }
-  return ret
-}
-
-// parse a component of the expanded set.
-// At this point, no pattern may contain "/" in it
-// so we're going to return a 2d array, where each entry is the full
-// pattern, split on '/', and then turned into a regular expression.
-// A regexp is made at the end which joins each array with an
-// escaped /, and another full one which joins each regexp with |.
-//
-// Following the lead of Bash 4.1, note that "**" only has special meaning
-// when it is the *only* thing in a path portion.  Otherwise, any series
-// of * is equivalent to a single *.  Globstar behavior is enabled by
-// default, and can be disabled by setting options.noglobstar.
-Minimatch.prototype.parse = parse;
-var SUBPARSE = {};
-function parse (pattern, isSub) {
-  var options = this.options;
-
-  // shortcuts
-  if (!options.noglobstar && pattern === "**") { return GLOBSTAR }
-  if (pattern === "") { return "" }
-
-  var re = ""
-    , hasMagic = !!options.nocase
-    , escaping = false
-    // ? => one single character
-    , patternListStack = []
-    , plType
-    , stateChar
-    , inClass = false
-    , reClassStart = -1
-    , classStart = -1
-    // . and .. never match anything that doesn't start with .,
-    // even when options.dot is set.
-    , patternStart = pattern.charAt(0) === "." ? "" // anything
-      // not (start or / followed by . or .. followed by / or end)
-      : options.dot ? "(?!(?:^|\\\/)\\.{1,2}(?:$|\\\/))"
-      : "(?!\\.)"
-    , self = this;
-
-  function clearStateChar () {
-    if (stateChar) {
-      // we had some state-tracking character
-      // that wasn't consumed by this pass.
-      switch (stateChar) {
-        case "*":
-          re += star;
-          hasMagic = true;
-          break
-        case "?":
-          re += qmark;
-          hasMagic = true;
-          break
-        default:
-          re += "\\"+stateChar;
-          break
-      }
-      self.debug('clearStateChar %j %j', stateChar, re);
-      stateChar = false;
-    }
-  }
-
-  for ( var i = 0, len = pattern.length, c
-      ; (i < len) && (c = pattern.charAt(i))
-      ; i ++ ) {
-
-    this.debug("%s\t%s %s %j", pattern, i, re, c);
-
-    // skip over any that are escaped.
-    if (escaping && reSpecials[c]) {
-      re += "\\" + c;
-      escaping = false;
-      continue
-    }
-
-    SWITCH: switch (c) {
-      case "/":
-        // completely not allowed, even escaped.
-        // Should already be path-split by now.
-        return false
-
-      case "\\":
-        clearStateChar();
-        escaping = true;
-        continue
-
-      // the various stateChar values
-      // for the "extglob" stuff.
-      case "?":
-      case "*":
-      case "+":
-      case "@":
-      case "!":
-        this.debug("%s\t%s %s %j <-- stateChar", pattern, i, re, c);
-
-        // all of those are literals inside a class, except that
-        // the glob [!a] means [^a] in regexp
-        if (inClass) {
-          this.debug('  in class');
-          if (c === "!" && i === classStart + 1) { c = "^"; }
-          re += c;
-          continue
-        }
-
-        // if we already have a stateChar, then it means
-        // that there was something like ** or +? in there.
-        // Handle the stateChar, then proceed with this one.
-        self.debug('call clearStateChar %j', stateChar);
-        clearStateChar();
-        stateChar = c;
-        // if extglob is disabled, then +(asdf|foo) isn't a thing.
-        // just clear the statechar *now*, rather than even diving into
-        // the patternList stuff.
-        if (options.noext) { clearStateChar(); }
-        continue
-
-      case "(":
-        if (inClass) {
-          re += "(";
-          continue
-        }
-
-        if (!stateChar) {
-          re += "\\(";
-          continue
-        }
-
-        plType = stateChar;
-        patternListStack.push({ type: plType
-                              , start: i - 1
-                              , reStart: re.length });
-        // negation is (?:(?!js)[^/]*)
-        re += stateChar === "!" ? "(?:(?!" : "(?:";
-        this.debug('plType %j %j', stateChar, re);
-        stateChar = false;
-        continue
-
-      case ")":
-        if (inClass || !patternListStack.length) {
-          re += "\\)";
-          continue
-        }
-
-        clearStateChar();
-        hasMagic = true;
-        re += ")";
-        plType = patternListStack.pop().type;
-        // negation is (?:(?!js)[^/]*)
-        // The others are (?:<pattern>)<type>
-        switch (plType) {
-          case "!":
-            re += "[^/]*?)";
-            break
-          case "?":
-          case "+":
-          case "*": re += plType;
-          case "@": break // the default anyway
-        }
-        continue
-
-      case "|":
-        if (inClass || !patternListStack.length || escaping) {
-          re += "\\|";
-          escaping = false;
-          continue
-        }
-
-        clearStateChar();
-        re += "|";
-        continue
-
-      // these are mostly the same in regexp and glob
-      case "[":
-        // swallow any state-tracking char before the [
-        clearStateChar();
-
-        if (inClass) {
-          re += "\\" + c;
-          continue
-        }
-
-        inClass = true;
-        classStart = i;
-        reClassStart = re.length;
-        re += c;
-        continue
-
-      case "]":
-        //  a right bracket shall lose its special
-        //  meaning and represent itself in
-        //  a bracket expression if it occurs
-        //  first in the list.  -- POSIX.2 2.8.3.2
-        if (i === classStart + 1 || !inClass) {
-          re += "\\" + c;
-          escaping = false;
-          continue
-        }
-
-        // finish up the class.
-        hasMagic = true;
-        inClass = false;
-        re += c;
-        continue
-
-      default:
-        // swallow any state char that wasn't consumed
-        clearStateChar();
-
-        if (escaping) {
-          // no need
-          escaping = false;
-        } else if (reSpecials[c]
-                   && !(c === "^" && inClass)) {
-          re += "\\";
-        }
-
-        re += c;
-
-    } // switch
-  } // for
-
-
-  // handle the case where we left a class open.
-  // "[abc" is valid, equivalent to "\[abc"
-  if (inClass) {
-    // split where the last [ was, and escape it
-    // this is a huge pita.  We now have to re-walk
-    // the contents of the would-be class to re-translate
-    // any characters that were passed through as-is
-    var cs = pattern.substr(classStart + 1)
-      , sp = this.parse(cs, SUBPARSE);
-    re = re.substr(0, reClassStart) + "\\[" + sp[0];
-    hasMagic = hasMagic || sp[1];
-  }
-
-  // handle the case where we had a +( thing at the *end*
-  // of the pattern.
-  // each pattern list stack adds 3 chars, and we need to go through
-  // and escape any | chars that were passed through as-is for the regexp.
-  // Go through and escape them, taking care not to double-escape any
-  // | chars that were already escaped.
-  var pl;
-  while (pl = patternListStack.pop()) {
-    var tail = re.slice(pl.reStart + 3);
-    // maybe some even number of \, then maybe 1 \, followed by a |
-    tail = tail.replace(/((?:\\{2})*)(\\?)\|/g, function (_, $1, $2) {
-      if (!$2) {
-        // the | isn't already escaped, so escape it.
-        $2 = "\\";
-      }
-
-      // need to escape all those slashes *again*, without escaping the
-      // one that we need for escaping the | character.  As it works out,
-      // escaping an even number of slashes can be done by simply repeating
-      // it exactly after itself.  That's why this trick works.
-      //
-      // I am sorry that you have to see this.
-      return $1 + $1 + $2 + "|"
+    // if a key is in output but not input -> add it
+    subtract(output, input).forEach(function (key) {
+        operations.push({ op: 'add', path: ptr.add(key).toString(), value: output[key] });
     });
-
-    this.debug("tail=%j\n   %s", tail, tail);
-    var t = pl.type === "*" ? star
-          : pl.type === "?" ? qmark
-          : "\\" + pl.type;
-
-    hasMagic = true;
-    re = re.slice(0, pl.reStart)
-       + t + "\\("
-       + tail;
-  }
-
-  // handle trailing things that only matter at the very end.
-  clearStateChar();
-  if (escaping) {
-    // trailing \\
-    re += "\\\\";
-  }
-
-  // only need to apply the nodot start if the re starts with
-  // something that could conceivably capture a dot
-  var addPatternStart = false;
-  switch (re.charAt(0)) {
-    case ".":
-    case "[":
-    case "(": addPatternStart = true;
-  }
-
-  // if the re is not "" at this point, then we need to make sure
-  // it doesn't match against an empty path part.
-  // Otherwise a/* will match a/, which it should not.
-  if (re !== "" && hasMagic) { re = "(?=.)" + re; }
-
-  if (addPatternStart) { re = patternStart + re; }
-
-  // parsing just a piece of a larger pattern.
-  if (isSub === SUBPARSE) {
-    return [ re, hasMagic ]
-  }
-
-  // skip the regexp for non-magical patterns
-  // unescape anything in it, though, so that it'll be
-  // an exact match against a file etc.
-  if (!hasMagic) {
-    return globUnescape(pattern)
-  }
-
-  var flags = options.nocase ? "i" : ""
-    , regExp = new RegExp("^" + re + "$", flags);
-
-  regExp._glob = pattern;
-  regExp._src = re;
-
-  return regExp
+    // if a key is in both, diff it recursively
+    intersection([input, output]).forEach(function (key) {
+        operations.push.apply(operations, diff(input[key], output[key], ptr.add(key)));
+    });
+    return operations;
 }
-
-minimatch.makeRe = function (pattern, options) {
-  return new Minimatch(pattern, options || {}).makeRe()
-};
-
-Minimatch.prototype.makeRe = makeRe;
-function makeRe () {
-  if (this.regexp || this.regexp === false) { return this.regexp }
-
-  // at this point, this.set is a 2d array of partial
-  // pattern strings, or "**".
-  //
-  // It's better to use .match().  This function shouldn't
-  // be used, really, but it's pretty convenient sometimes,
-  // when you just want to work with a regex.
-  var set = this.set;
-
-  if (!set.length) { return this.regexp = false }
-  var options = this.options;
-
-  var twoStar = options.noglobstar ? star
-      : options.dot ? twoStarDot
-      : twoStarNoDot
-    , flags = options.nocase ? "i" : "";
-
-  var re = set.map(function (pattern) {
-    return pattern.map(function (p) {
-      return (p === GLOBSTAR) ? twoStar
-           : (typeof p === "string") ? regExpEscape(p)
-           : p._src
-    }).join("\\\/")
-  }).join("|");
-
-  // must match entire pattern
-  // ending in a * or ** will make it less strict.
-  re = "^(?:" + re + ")$";
-
-  // can match anything, as long as it's not this.
-  if (this.negate) { re = "^(?!" + re + ").*$"; }
-
-  try {
-    return this.regexp = new RegExp(re, flags)
-  } catch (ex) {
-    return this.regexp = false
-  }
+exports.diffObjects = diffObjects;
+function diffValues(input, output, ptr) {
+    if (!equal.compare(input, output)) {
+        return [{ op: 'replace', path: ptr.toString(), value: output }];
+    }
+    return [];
 }
+exports.diffValues = diffValues;
+function diffAny(input, output, ptr, diff) {
+    if (diff === void 0) { diff = diffAny; }
+    var input_type = equal.objectType(input);
+    var output_type = equal.objectType(output);
+    if (input_type == 'array' && output_type == 'array') {
+        return diffArrays(input, output, ptr, diff);
+    }
+    if (input_type == 'object' && output_type == 'object') {
+        return diffObjects(input, output, ptr, diff);
+    }
+    // only pairs of arrays and objects can go down a path to produce a smaller
+    // diff; everything else must be wholesale replaced if inequal
+    return diffValues(input, output, ptr);
+}
+exports.diffAny = diffAny;
+});
 
-minimatch.match = function (list, pattern, options) {
-  var mm = new Minimatch(pattern, options);
-  list = list.filter(function (f) {
-    return mm.match(f)
-  });
-  if (options.nonull && !list.length) {
-    list.push(pattern);
+unwrapExports(diff);
+var diff_1 = diff.isDestructive;
+var diff_2 = diff.subtract;
+var diff_3 = diff.intersection;
+var diff_4 = diff.diffArrays;
+var diff_5 = diff.diffObjects;
+var diff_6 = diff.diffValues;
+var diff_7 = diff.diffAny;
+
+var rfc6902 = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+
+/**
+Apply a 'application/json-patch+json'-type patch to an object.
+
+`patch` *must* be an array of operations.
+
+> Operation objects MUST have exactly one "op" member, whose value
+> indicates the operation to perform.  Its value MUST be one of "add",
+> "remove", "replace", "move", "copy", or "test"; other values are
+> errors.
+
+This method mutates the target object in-place.
+
+@returns list of results, one for each operation: `null` indicated success,
+         otherwise, the result will be an instance of one of the Error classes:
+         MissingError, InvalidOperationError, or TestError.
+*/
+function applyPatch(object, patch) {
+    return patch.map(function (operation) { return patch$2.apply(object, operation); });
+}
+exports.applyPatch = applyPatch;
+function wrapVoidableDiff(diff$$1) {
+    function wrappedDiff(input, output, ptr) {
+        var custom_patch = diff$$1(input, output, ptr);
+        // ensure an array is always returned
+        return Array.isArray(custom_patch) ? custom_patch : diff.diffAny(input, output, ptr, wrappedDiff);
+    }
+    return wrappedDiff;
+}
+/**
+Produce a 'application/json-patch+json'-type patch to get from one object to
+another.
+
+This does not alter `input` or `output` unless they have a property getter with
+side-effects (which is not a good idea anyway).
+
+`diff` is called on each pair of comparable non-primitive nodes in the
+`input`/`output` object trees, producing nested patches. Return `undefined`
+to fall back to default behaviour.
+
+Returns list of operations to perform on `input` to produce `output`.
+*/
+function createPatch(input, output, diff$$1) {
+    var ptr = new pointer.Pointer();
+    // a new Pointer gets a default path of [''] if not specified
+    return (diff$$1 ? wrapVoidableDiff(diff$$1) : diff.diffAny)(input, output, ptr);
+}
+exports.createPatch = createPatch;
+/**
+Create a test operation based on `input`'s current evaluation of the JSON
+Pointer `path`; if such a pointer cannot be resolved, returns undefined.
+*/
+function createTest(input, path$$1) {
+    var endpoint = pointer.Pointer.fromJSON(path$$1).evaluate(input);
+    if (endpoint !== undefined) {
+        return { op: 'test', path: path$$1, value: endpoint.value };
+    }
+}
+/**
+Produce an 'application/json-patch+json'-type list of tests, to verify that
+existing values in an object are identical to the those captured at some
+checkpoint (whenever this function is called).
+
+This does not alter `input` or `output` unless they have a property getter with
+side-effects (which is not a good idea anyway).
+
+Returns list of test operations.
+*/
+function createTests(input, patch) {
+    var tests = new Array();
+    patch.filter(diff.isDestructive).forEach(function (operation) {
+        var pathTest = createTest(input, operation.path);
+        if (pathTest)
+            { tests.push(pathTest); }
+        if ('from' in operation) {
+            var fromTest = createTest(input, operation.from);
+            if (fromTest)
+                { tests.push(fromTest); }
+        }
+    });
+    return tests;
+}
+exports.createTests = createTests;
+});
+
+unwrapExports(rfc6902);
+var rfc6902_1 = rfc6902.applyPatch;
+var rfc6902_2 = rfc6902.createPatch;
+var rfc6902_3 = rfc6902.createTests;
+
+var objectPath = createCommonjsModule(function (module) {
+(function (root, factory){
+
+  /*istanbul ignore next:cant test*/
+  {
+    module.exports = factory();
+  }
+})(commonjsGlobal, function(){
+
+  var toStr = Object.prototype.toString;
+  function hasOwnProperty(obj, prop) {
+    if(obj == null) {
+      return false
+    }
+    //to handle objects with null prototypes (too edge case?)
+    return Object.prototype.hasOwnProperty.call(obj, prop)
+  }
+
+  function isEmpty(value){
+    if (!value) {
+      return true;
+    }
+    if (isArray(value) && value.length === 0) {
+        return true;
+    } else if (typeof value !== 'string') {
+        for (var i in value) {
+            if (hasOwnProperty(value, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+  }
+
+  function toString(type){
+    return toStr.call(type);
+  }
+
+  function isObject(obj){
+    return typeof obj === 'object' && toString(obj) === "[object Object]";
+  }
+
+  var isArray = Array.isArray || function(obj){
+    /*istanbul ignore next:cant test*/
+    return toStr.call(obj) === '[object Array]';
+  };
+
+  function isBoolean(obj){
+    return typeof obj === 'boolean' || toString(obj) === '[object Boolean]';
+  }
+
+  function getKey(key){
+    var intKey = parseInt(key);
+    if (intKey.toString() === key) {
+      return intKey;
+    }
+    return key;
+  }
+
+  function factory(options) {
+    options = options || {};
+
+    var objectPath = function(obj) {
+      return Object.keys(objectPath).reduce(function(proxy, prop) {
+        if(prop === 'create') {
+          return proxy;
+        }
+
+        /*istanbul ignore else*/
+        if (typeof objectPath[prop] === 'function') {
+          proxy[prop] = objectPath[prop].bind(objectPath, obj);
+        }
+
+        return proxy;
+      }, {});
+    };
+
+    function hasShallowProperty(obj, prop) {
+      return (options.includeInheritedProps || (typeof prop === 'number' && Array.isArray(obj)) || hasOwnProperty(obj, prop))
+    }
+
+    function getShallowProperty(obj, prop) {
+      if (hasShallowProperty(obj, prop)) {
+        return obj[prop];
+      }
+    }
+
+    function set(obj, path$$1, value, doNotReplace){
+      if (typeof path$$1 === 'number') {
+        path$$1 = [path$$1];
+      }
+      if (!path$$1 || path$$1.length === 0) {
+        return obj;
+      }
+      if (typeof path$$1 === 'string') {
+        return set(obj, path$$1.split('.').map(getKey), value, doNotReplace);
+      }
+      var currentPath = path$$1[0];
+      var currentValue = getShallowProperty(obj, currentPath);
+      if (path$$1.length === 1) {
+        if (currentValue === void 0 || !doNotReplace) {
+          obj[currentPath] = value;
+        }
+        return currentValue;
+      }
+
+      if (currentValue === void 0) {
+        //check if we assume an array
+        if(typeof path$$1[1] === 'number') {
+          obj[currentPath] = [];
+        } else {
+          obj[currentPath] = {};
+        }
+      }
+
+      return set(obj[currentPath], path$$1.slice(1), value, doNotReplace);
+    }
+
+    objectPath.has = function (obj, path$$1) {
+      if (typeof path$$1 === 'number') {
+        path$$1 = [path$$1];
+      } else if (typeof path$$1 === 'string') {
+        path$$1 = path$$1.split('.');
+      }
+
+      if (!path$$1 || path$$1.length === 0) {
+        return !!obj;
+      }
+
+      for (var i = 0; i < path$$1.length; i++) {
+        var j = getKey(path$$1[i]);
+
+        if((typeof j === 'number' && isArray(obj) && j < obj.length) ||
+          (options.includeInheritedProps ? (j in Object(obj)) : hasOwnProperty(obj, j))) {
+          obj = obj[j];
+        } else {
+          return false;
+        }
+      }
+
+      return true;
+    };
+
+    objectPath.ensureExists = function (obj, path$$1, value){
+      return set(obj, path$$1, value, true);
+    };
+
+    objectPath.set = function (obj, path$$1, value, doNotReplace){
+      return set(obj, path$$1, value, doNotReplace);
+    };
+
+    objectPath.insert = function (obj, path$$1, value, at){
+      var arr = objectPath.get(obj, path$$1);
+      at = ~~at;
+      if (!isArray(arr)) {
+        arr = [];
+        objectPath.set(obj, path$$1, arr);
+      }
+      arr.splice(at, 0, value);
+    };
+
+    objectPath.empty = function(obj, path$$1) {
+      if (isEmpty(path$$1)) {
+        return void 0;
+      }
+      if (obj == null) {
+        return void 0;
+      }
+
+      var value, i;
+      if (!(value = objectPath.get(obj, path$$1))) {
+        return void 0;
+      }
+
+      if (typeof value === 'string') {
+        return objectPath.set(obj, path$$1, '');
+      } else if (isBoolean(value)) {
+        return objectPath.set(obj, path$$1, false);
+      } else if (typeof value === 'number') {
+        return objectPath.set(obj, path$$1, 0);
+      } else if (isArray(value)) {
+        value.length = 0;
+      } else if (isObject(value)) {
+        for (i in value) {
+          if (hasShallowProperty(value, i)) {
+            delete value[i];
+          }
+        }
+      } else {
+        return objectPath.set(obj, path$$1, null);
+      }
+    };
+
+    objectPath.push = function (obj, path$$1 /*, values */){
+      var arr = objectPath.get(obj, path$$1);
+      if (!isArray(arr)) {
+        arr = [];
+        objectPath.set(obj, path$$1, arr);
+      }
+
+      arr.push.apply(arr, Array.prototype.slice.call(arguments, 2));
+    };
+
+    objectPath.coalesce = function (obj, paths, defaultValue) {
+      var value;
+
+      for (var i = 0, len = paths.length; i < len; i++) {
+        if ((value = objectPath.get(obj, paths[i])) !== void 0) {
+          return value;
+        }
+      }
+
+      return defaultValue;
+    };
+
+    objectPath.get = function (obj, path$$1, defaultValue){
+      if (typeof path$$1 === 'number') {
+        path$$1 = [path$$1];
+      }
+      if (!path$$1 || path$$1.length === 0) {
+        return obj;
+      }
+      if (obj == null) {
+        return defaultValue;
+      }
+      if (typeof path$$1 === 'string') {
+        return objectPath.get(obj, path$$1.split('.'), defaultValue);
+      }
+
+      var currentPath = getKey(path$$1[0]);
+      var nextObj = getShallowProperty(obj, currentPath);
+      if (nextObj === void 0) {
+        return defaultValue;
+      }
+
+      if (path$$1.length === 1) {
+        return nextObj;
+      }
+
+      return objectPath.get(obj[currentPath], path$$1.slice(1), defaultValue);
+    };
+
+    objectPath.del = function del(obj, path$$1) {
+      if (typeof path$$1 === 'number') {
+        path$$1 = [path$$1];
+      }
+
+      if (obj == null) {
+        return obj;
+      }
+
+      if (isEmpty(path$$1)) {
+        return obj;
+      }
+      if(typeof path$$1 === 'string') {
+        return objectPath.del(obj, path$$1.split('.'));
+      }
+
+      var currentPath = getKey(path$$1[0]);
+      if (!hasShallowProperty(obj, currentPath)) {
+        return obj;
+      }
+
+      if(path$$1.length === 1) {
+        if (isArray(obj)) {
+          obj.splice(currentPath, 1);
+        } else {
+          delete obj[currentPath];
+        }
+      } else {
+        return objectPath.del(obj[currentPath], path$$1.slice(1));
+      }
+
+      return obj;
+    };
+
+    return objectPath;
+  }
+
+  var mod = factory();
+  mod.create = factory;
+  mod.withInheritedProps = factory({includeInheritedProps: true});
+  return mod;
+});
+});
+
+var walk = function (ref) {
+  var dir = ref.dir;
+  var filter = ref.filter;
+  var relativeTo = ref.relativeTo;
+  var list = ref.list; if ( list === void 0 ) list = {};
+  var depth = ref.depth; if ( depth === void 0 ) depth = 0;
+
+  var files = fs.readdirSync(dir);
+  ++depth;
+  for (var i in files) {
+    var file = files[i];
+    var _file = path.join(dir, file);
+    if (fs.statSync(_file).isDirectory()) {
+      walk({
+        dir: _file,
+        filter: filter,
+        relativeTo: depth === 1 ? _file : relativeTo,
+        depth: depth,
+        list: depth === 1 ? list[file] = {} : list
+      });
+    } else if ((filter.indexOf(path.extname(_file)) > -1) && depth > 1) {
+      list[path.relative(relativeTo, _file)] = JSON.parse(fs.readFileSync(_file, 'utf-8'));
+    }
   }
   return list
 };
 
-Minimatch.prototype.match = match;
-function match (f, partial) {
-  this.debug("match", f, this.pattern);
-  // short-circuit in the case of busted things.
-  // comments, etc.
-  if (this.comment) { return false }
-  if (this.empty) { return f === "" }
-
-  if (f === "/" && partial) { return true }
-
-  var options = this.options;
-
-  // windows: need to use /, not \
-  // On other platforms, \ is a valid (albeit bad) filename char.
-  if (platform === "win32") {
-    f = f.split("\\").join("/");
-  }
-
-  // treat the test path as a set of pathparts.
-  f = f.split(slashSplit);
-  this.debug(this.pattern, "split", f);
-
-  // just ONE of the pattern sets in this.set needs to match
-  // in order for it to be valid.  If negating, then just one
-  // match means that we have failed.
-  // Either way, return on the first hit.
-
-  var set = this.set;
-  this.debug(this.pattern, "set", set);
-
-  var splitFile = path$$1.basename(f.join("/")).split("/");
-
-  for (var i = 0, l = set.length; i < l; i ++) {
-    var pattern = set[i], file = f;
-    if (options.matchBase && pattern.length === 1) {
-      file = splitFile;
-    }
-    var hit = this.matchOne(file, pattern, partial);
-    if (hit) {
-      if (options.flipNegate) { return true }
-      return !this.negate
-    }
-  }
-
-  // didn't get any hits.  this is success if it's a negative
-  // pattern, failure otherwise.
-  if (options.flipNegate) { return false }
-  return this.negate
-}
-
-// set partial to true to test if, for example,
-// "/a/b" matches the start of "/*/b/*/d"
-// Partial means, if you run out of file before you run
-// out of pattern, then that's fine, as long as all
-// the parts match.
-Minimatch.prototype.matchOne = function (file, pattern, partial) {
-  var options = this.options;
-
-  this.debug("matchOne",
-              { "this": this
-              , file: file
-              , pattern: pattern });
-
-  this.debug("matchOne", file.length, pattern.length);
-
-  for ( var fi = 0
-          , pi = 0
-          , fl = file.length
-          , pl = pattern.length
-      ; (fi < fl) && (pi < pl)
-      ; fi ++, pi ++ ) {
-
-    this.debug("matchOne loop");
-    var p = pattern[pi]
-      , f = file[fi];
-
-    this.debug(pattern, p, f);
-
-    // should be impossible.
-    // some invalid regexp stuff in the set.
-    if (p === false) { return false }
-
-    if (p === GLOBSTAR) {
-      this.debug('GLOBSTAR', [pattern, p, f]);
-
-      // "**"
-      // a/**/b/**/c would match the following:
-      // a/b/x/y/z/c
-      // a/x/y/z/b/c
-      // a/b/x/b/x/c
-      // a/b/c
-      // To do this, take the rest of the pattern after
-      // the **, and see if it would match the file remainder.
-      // If so, return success.
-      // If not, the ** "swallows" a segment, and try again.
-      // This is recursively awful.
-      //
-      // a/**/b/**/c matching a/b/x/y/z/c
-      // - a matches a
-      // - doublestar
-      //   - matchOne(b/x/y/z/c, b/**/c)
-      //     - b matches b
-      //     - doublestar
-      //       - matchOne(x/y/z/c, c) -> no
-      //       - matchOne(y/z/c, c) -> no
-      //       - matchOne(z/c, c) -> no
-      //       - matchOne(c, c) yes, hit
-      var fr = fi
-        , pr = pi + 1;
-      if (pr === pl) {
-        this.debug('** at the end');
-        // a ** at the end will just swallow the rest.
-        // We have found a match.
-        // however, it will not swallow /.x, unless
-        // options.dot is set.
-        // . and .. are *never* matched by **, for explosively
-        // exponential reasons.
-        for ( ; fi < fl; fi ++) {
-          if (file[fi] === "." || file[fi] === ".." ||
-              (!options.dot && file[fi].charAt(0) === ".")) { return false }
-        }
-        return true
-      }
-
-      // ok, let's see if we can swallow whatever we can.
-      WHILE: while (fr < fl) {
-        var swallowee = file[fr];
-
-        this.debug('\nglobstar while',
-                    file, fr, pattern, pr, swallowee);
-
-        // XXX remove this slice.  Just pass the start index.
-        if (this.matchOne(file.slice(fr), pattern.slice(pr), partial)) {
-          this.debug('globstar found match!', fr, fl, swallowee);
-          // found a match.
-          return true
-        } else {
-          // can't swallow "." or ".." ever.
-          // can only swallow ".foo" when explicitly asked.
-          if (swallowee === "." || swallowee === ".." ||
-              (!options.dot && swallowee.charAt(0) === ".")) {
-            this.debug("dot detected!", file, fr, pattern, pr);
-            break WHILE
-          }
-
-          // ** swallows a segment, and continue.
-          this.debug('globstar swallow a segment, and continue');
-          fr ++;
-        }
-      }
-      // no match was found.
-      // However, in partial mode, we can't say this is necessarily over.
-      // If there's more *pattern* left, then 
-      if (partial) {
-        // ran out of file
-        this.debug("\n>>> no match, partial?", file, fr, pattern, pr);
-        if (fr === fl) { return true }
-      }
-      return false
-    }
-
-    // something other than **
-    // non-magic patterns just have to match exactly
-    // patterns with magic have been turned into regexps.
-    var hit;
-    if (typeof p === "string") {
-      if (options.nocase) {
-        hit = f.toLowerCase() === p.toLowerCase();
-      } else {
-        hit = f === p;
-      }
-      this.debug("string match", p, f, hit);
-    } else {
-      hit = f.match(p);
-      this.debug("pattern match", p, f, hit);
-    }
-
-    if (!hit) { return false }
-  }
-
-  // Note: ending in / means that we'll get a final ""
-  // at the end of the pattern.  This can only match a
-  // corresponding "" at the end of the file.
-  // If the file ends in /, then it can only match a
-  // a pattern that ends in /, unless the pattern just
-  // doesn't have any more for it. But, a/b/ should *not*
-  // match "a/b/*", even though "" matches against the
-  // [^/]*? pattern, except in partial mode, where it might
-  // simply not be reached yet.
-  // However, a/b/ should still satisfy a/*
-
-  // now either we fell off the end of the pattern, or we're done.
-  if (fi === fl && pi === pl) {
-    // ran out of pattern and filename at the same time.
-    // an exact hit!
-    return true
-  } else if (fi === fl) {
-    // ran out of file, but still had pattern left.
-    // this is ok if we're doing the match as part of
-    // a glob fs traversal.
-    return partial
-  } else if (pi === pl) {
-    // ran out of pattern, still have file left.
-    // this is only acceptable if we're on the very last
-    // empty segment of a file with a trailing slash.
-    // a/* should match a/b/
-    var emptyFileEnd = (fi === fl - 1) && (file[fi] === "");
-    return emptyFileEnd
-  }
-
-  // should be unreachable.
-  throw new Error("wtf?")
-};
-
-
-// replace stuff like \* with *
-function globUnescape (s) {
-  return s.replace(/\\(.)/g, "$1")
-}
-
-
-function regExpEscape (s) {
-  return s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
-}
-
-})( typeof require === "function" ? require : null,
-    commonjsGlobal,
-    module,
-    typeof process === "object" ? process.platform : "win32"
-  );
-});
-
-var path$i = require('path');
-var promise$1 = main;
-promise$1 = 'default' in promise$1 ? promise$1['default'] : promise$1;
-var fs$2 = require('fs');
-var minimatch$1 = minimatch;
-minimatch$1 = 'default' in minimatch$1 ? minimatch$1['default'] : minimatch$1;
-
-function normaliseOptions() {
-	var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-	// Exclude .DS_Store, Thumbs.db and any other gubbins specified by the user
-	if (!options.exclude) {
-		options.exclude = [];
-	} else if (typeof options.exclude === 'string') {
-		options.exclude = [options.exclude];
-	}
-
-	options.exclude.push('**/.DS_Store', '**/Thumbs.db', '**/.gitkeep');
-	return options;
-}
-
-function filterExclusions(files, relative, exclusions) {
-	if (!exclusions) { return files; }
-
-	return files.filter(function (fileName) {
-		var filePath = path$i.join(relative, fileName);
-
-		var i = exclusions.length;
-		while (i--) {
-			if (minimatch$1(filePath, exclusions[i])) { return false; }
-		}
-
-		return true;
-	});
-}
-
-// Get key from path, e.g. 'project/data/config.json' -> 'config'
-
-function getKey(fileName, options) {
-	var lastDotIndex = fileName.lastIndexOf('.');
-
-	if (lastDotIndex > 0 && !options.keepExtensions) {
-		return fileName.substr(0, lastDotIndex);
-	}
-
-	return fileName;
-}
-
-function toArray(object) {
-	var array = [],
-	    key;
-
-	for (key in object) {
-		if (object.hasOwnProperty(key)) {
-			array[+key] = object[key];
-		}
-	}
-
-	return array;
-}
-
-function isNumeric(key) {
-	return !isNaN(+key);
-}
-
-function getDir(root, dir, options) {
-	var rel = path$i.relative(root, dir);
-
-	var files = fs$2.readdirSync(dir);
-	files = filterExclusions(files, rel, options.exclude);
-
-	if (!files.length) { return {}; }
-
-	var keysAreNumeric = files.every(isNumeric);
-	var result = keysAreNumeric ? [] : {};
-
-	files.forEach(function (fileName) {
-		var filePath = path$i.join(dir, fileName);
-		var isDir = fs$2.statSync(filePath).isDirectory();
-
-		var key = isDir ? fileName : getKey(fileName, options);
-
-		if (key in result) {
-			throw new Error('You cannot have multiple files in the same folder with the same name (disregarding extensions) - failed at ' + filePath);
-		}
-
-		result[keysAreNumeric ? +key : key] = isDir ? getDir(root, filePath, options) : getFile(filePath);
-	});
-
-	return result;
-}
-
-function getFile(filePath) {
-	var data = fs$2.readFileSync(filePath, 'utf-8');
-
-	try {
-		data = JSON.parse(data);
-	} catch (e) {
-		// treat as text
-	}
-
-	return data;
-}
-
-function getDir$1(root, dir, options, gotDir) {
-	var rel = path$i.relative(root, dir);
-
-	fs$2.readdir(dir, function (err, files) {
-		if (err) {
-			gotDir(err);
-			return;
-		}
-
-		var result = {};
-
-		var contents = filterExclusions(files, rel, options.exclude);
-
-		if (!contents.length) {
-			gotDir(null, result);
-			return;
-		}
-
-		var keysAreNumeric = true; // assume we need to create an array, until we don't
-		var remaining = contents.length;
-
-		function check() {
-			if (! --remaining) {
-				if (keysAreNumeric) {
-					result = toArray(result);
-				}
-
-				gotDir(null, result);
-			}
-		}
-
-		contents.forEach(function (fileName) {
-			var filePath = path$i.join(dir, fileName);
-			var key = undefined;
-
-			function gotFile(err, data) {
-				if (err) {
-					gotDir(err, null);
-				} else if (result[key] !== undefined) {
-					gotDir('You cannot have multiple files in the same folder with the same name (disregarding extensions) - failed at ' + filePath);
-				} else {
-					result[key] = data;
-					check();
-				}
-			}
-
-			fs$2.stat(filePath, function (err, stats) {
-				if (err) {
-					gotDir(err, null);
-					return;
-				}
-
-				if (stats.isDirectory()) {
-					key = fileName;
-					getDir$1(root, filePath, options, gotFile);
-				} else {
-					key = getKey(fileName, options);
-					getFile$1(filePath, gotFile);
-				}
-
-				if (isNaN(+key)) {
-					keysAreNumeric = false;
-				}
-			});
-		});
-	});
-}
-
-function getFile$1(filePath, gotFile) {
-	fs$2.readFile(filePath, function (err, result) {
-		var data;
-
-		if (err) {
-			gotFile(err, null);
-		} else {
-			data = result.toString();
-
-			try {
-				data = JSON.parse(data);
-			} catch (e) {
-				// treat as text
-			}
-
-			gotFile(null, data);
-		}
-	});
-}
-
-var Promise$3 = promise$1.Promise;
-
-function spelunk(root, options, callback) {
-	var promise = new Promise$3(function (fulfil, reject) {
-		if (typeof options === 'function') {
-			callback = options;
-			options = {};
-		}
-
-		options = normaliseOptions(options);
-		root = path$i.resolve(root);
-
-		// Get the specified folder, then done
-		getDir$1(root, root, options, function (err, result) {
-			if (err) { return reject(err); }
-			fulfil(result);
-		});
-	});
-
-	if (callback) {
-		promise.then(function (result) {
-			return callback(null, result);
-		})['catch'](callback);
-	}
-
-	return promise;
-}
-
-spelunk.sync = function (root, options) {
-	root = path$i.resolve(root);
-	return getDir(root, root, normaliseOptions(options));
-};
-
-var spelunk_1 = spelunk;
-
-var generateTranslations = function (options) {
+var i18n = function (options) {
   var target = options.target;
   var baseLanguage = options.baseLanguage;
   var transformer = options.transformer;
 
-  var i18nData = spelunk_1.sync(target, {
-    keepExtensions: false,
-    exclude: path.join(target, '/') + '**/*.!(json)'
+  var transform = transformer || (function (lang, data) {
+    return { translations: data }
   });
+
+  var data = walk({
+    dir: target,
+    filter: ['.json'],
+    relativeTo: target,
+    base: baseLanguage
+  });
+
+  var base = data[baseLanguage];
 
   var patches = {};
+  var result = {};
 
-  var basei18n = i18nData[baseLanguage];
-  var langi18n, lang, basei18nComponenti18n, langi18nComponenti18n, key, clonedBasei18nComponenti18n, component;
-  for (lang in i18nData) {
-    if (lang === baseLanguage) { continue }
-    langi18n = i18nData[lang];
-    patches[lang] = {};
-    for (component in basei18n) {
-      basei18nComponenti18n = basei18n[component];
-      langi18nComponenti18n = langi18n[component];
-      if (langi18nComponenti18n) {
-        var t = JSON.stringify(basei18nComponenti18n);
-        clonedBasei18nComponenti18n = JSON.parse(t);
-        if (JSON.stringify(langi18nComponenti18n) !== t) {
-          for (key in clonedBasei18nComponenti18n) {
-            clonedBasei18nComponenti18n[key] = langi18nComponenti18n[key] || clonedBasei18nComponenti18n[key];
-          }
-          patches[lang][component] = clonedBasei18nComponenti18n;
-          i18nData[lang][component] = clonedBasei18nComponenti18n;
+  for (var lang in data) {
+    var langJson = data[lang];
+    if (baseLanguage !== lang) {
+      var patch = rfc6902_2(langJson, base);
+      patch = patch.filter(function (change) {
+        return change.op !== 'replace'
+      });
+      patches[lang] = patch;
+      rfc6902_1(langJson, patch);
+    }
+
+    var translations = {};
+
+    for (var file in langJson) {
+      var parsed = path.parse(file);
+      var key = path.join(parsed.dir, parsed.name).split(path.sep);
+      objectPath.set(translations, key, langJson[file]);
+    }
+
+    result[lang] = transform(lang, translations);
+  }
+
+  var languageList = Object.keys(result).join(', ');
+
+  console.log(ansiColors.bold('\nLanguages found:'), ansiColors.green(("" + languageList)));
+
+  for (var lang$1 in patches) {
+    console.log(ansiColors.bold(("\nLanguage: \"" + lang$1 + "\" changes report")));
+
+    for (var i = 0; i < patches[lang$1].length; i++) {
+      var patch$1 = patches[lang$1][i];
+      var message = '';
+
+      var key$1 = null;
+      var location = patch$1.path.substring(1).replace(/(~1)/g, '/');
+      var split = location.split('.json');
+      if (split[1]) {
+        key$1 = split[1].substring(1);
+      }
+
+      location = path.join(target, lang$1, ((split[0]) + ".json"));
+      location = path.join(target, path.relative(target, location));
+
+      var content = (void 0);
+      if (patch$1.op === 'add') {
+        var value = patch$1.value;
+        if (key$1 && value) {
+          content = lib.readJsonSync(location);
+          objectPath.set(content, key$1.split('/'), value);
+          message = (logUtils.success) + " " + key$1 + " with the value from " + baseLanguage + " is added to the file: " + location;
+        } else {
+          message = (logUtils.success) + " " + location + " is created. Used the content from base language: " + baseLanguage;
+          content = value;
         }
-      } else if (!langi18nComponenti18n) {
-        i18nData[lang][component] = basei18nComponenti18n || {};
-        patches[lang][component] = basei18nComponenti18n || {};
+        lib.writeJSONSync(location, content, { spaces: '\t' });
+      } else if (patch$1.op === 'remove') {
+        if (key$1) {
+          message = (logUtils.error) + " The key " + key$1 + " is deleted from the file: " + location;
+          content = lib.readJsonSync(location);
+          objectPath.del(content, key$1.split('/'));
+          lib.writeJSONSync(location, content, { spaces: '\t' });
+        } else {
+          message = (logUtils.error) + " Removing the file " + location + ". It does not exist in base language(" + baseLanguage + ") folder";
+          fs.unlinkSync(location);
+        }
       }
-    }
 
-    for (component in langi18n) {
-      if (!basei18n[component]) {
-        patches[lang][component] = null;
-      }
+      console.log(ansiColors.grey(("   " + message)));
     }
   }
 
-  console.log(ansiColors.grey(("  " + (logUtils.info) + " Languages:")), ansiColors.green(("" + (Object.keys(i18nData).join(', ')))));
+  console.log(ansiColors.bold(("\nJSON files in \"" + (Object.keys(patches).join(', ')) + "\" are updated to match base language " + baseLanguage)));
 
-  for (lang in patches) {
-    var components = Object.keys(patches[lang]);
-    components.forEach(function (component) {
-      var content = patches[lang][component];
-      var filepath = path.join(target, lang, component + '.json');
-      if (!content) {
-        console.log(ansiColors.magenta(("  " + (logUtils.info) + " Removing " + lang + "/" + component + ". Matching base language: " + baseLanguage)));
-        lib.removeSync(filepath);
-      } else {
-        console.log(ansiColors.grey(("  " + (logUtils.info) + " Matching " + lang + "/" + component + " with " + baseLanguage + "/" + component + " keys")));
-        lib.writeJSONSync(filepath, content, {
-          spaces: '\t'
-        });
-      }
-    });
-  }
-
-  transformer = transformer || (function (lang, data) {
-    return {
-      translations: i18nData[lang]
-    }
-  });
-
-  for (lang in i18nData) {
-    i18nData[lang] = transformer(lang, i18nData[lang]);
-  }
-
-  return i18nData
+  return result
 };
 
 var generated = null;
@@ -5953,14 +5245,14 @@ var i18nBundler = function (options) {
     load: function load (id) {
       if (id === moduleName) {
         console.log(
-          ansiColors.underline.cyan("\ni18n bundler"), ansiColors.grey((": Target: " + (options.target) + ", Base language: " + (options.baseLanguage)))
+          ansiColors.underline.cyan('\ni18n bundler'), ansiColors.grey((": Target: " + (options.target) + ", Base language: " + (options.baseLanguage)))
         );
         if (!generated) {
-          generated = generateTranslations(options);
+          generated = i18n(options);
           generated = 'export default ' + JSON.stringify(generated);
         }
         console.log(
-          ansiColors.grey(("  " + (logUtils.info) + " Import translations using: ")) + ansiColors.bold.green(("import translations from '" + moduleName + "'"))
+          ansiColors.bold('\nImport translations using: ') + ansiColors.bold.green(("import translations from '" + moduleName + "'"))
         );
         return generated
       }
@@ -5976,7 +5268,7 @@ var copyAssets = function (obj, filterFunc) {
   return {
     buildStart: function buildStart () {
       var filterConfig = filterFunc ? { filter: filterFunc } : undefined;
-      console.log(ansiColors.bold.underline.cyan("\nCopying assets"));
+      console.log(ansiColors.bold.underline.cyan('\nCopying assets'));
       for (var p in obj) {
         lib.copySync(p, obj[p], filterConfig);
         console.log(ansiColors.green(("  " + (logUtils.success) + " " + p + " -> " + (obj[p]))));
@@ -5985,7 +5277,7 @@ var copyAssets = function (obj, filterFunc) {
   }
 };
 
-var index = {
+var index$1 = {
   emptyDirectories: emptyDirectories,
   prepareDirectories: prepareDirectories,
   htmlInjector: htmlInjector,
@@ -5993,5 +5285,5 @@ var index = {
   copyAssets: copyAssets
 };
 
-module.exports = index;
+module.exports = index$1;
 //# sourceMappingURL=rollup-plugin-app-utils.js.map
