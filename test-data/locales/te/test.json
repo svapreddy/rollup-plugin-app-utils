@@ -4,7 +4,16 @@
   "nested": {
     "nested": {
       "nested": {
-        "nested": {}
+        "nested": {
+          "willBeRemovedDuringBundle": true
+        }
+      }
+    }
+  },
+  "nested-2": {
+    "nested-2": {
+      "nested-2": {
+        "nested-2": {}
       }
     }
   }

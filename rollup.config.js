@@ -5,26 +5,24 @@ import buble from 'rollup-plugin-buble'
 import license from 'rollup-plugin-license'
 import filesize from 'rollup-plugin-filesize'
 import standard from 'rollup-plugin-standard'
-import { uglify } from 'rollup-plugin-uglify'
 import builtins from 'builtin-modules'
 
-let packageJSON = require('./package.json')
+const packageJSON = require('./package.json')
 
 const config = {
   name: packageJSON.name
 }
 
-const distFolder = 'dist'
 const bundleName = config.name
 
-let defaultConfig = [{
+const defaultConfig = [{
   input: 'src/index.js',
   external: builtins,
   plugins: [
     standard(),
     commonjs({
       include: 'node_modules/**',
-      ignore: [ 'fs', 'stream', 'path', 'assert', 'util', 'os' ]
+      ignore: ['fs', 'stream', 'path', 'assert', 'util', 'os']
     }),
     resolve({
       include: 'node_modules/**',

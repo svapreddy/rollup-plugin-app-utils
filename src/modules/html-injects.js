@@ -4,7 +4,7 @@ import fs from 'fs'
 import fsextra from 'fs-extra'
 import format from 'string-template'
 
-let htmlInjector = (options) => {
+const htmlInjector = (options) => {
   return {
     generateBundle () {
       const template = options.template

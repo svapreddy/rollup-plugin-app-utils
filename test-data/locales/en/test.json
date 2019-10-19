@@ -9,5 +9,14 @@
         }
       }
     }
+  },
+  "nested-2": {
+    "nested-2": {
+      "nested-3": {
+        "nested-4": {
+          "key": "value"
+        }
+      }
+    }
   }
 }
