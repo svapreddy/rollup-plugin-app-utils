@@ -5181,7 +5181,9 @@ var i18n = function (options) {
   console.log(ansiColors.bold('\nLanguages found:'), ansiColors.green(("" + languageList)));
 
   for (var lang$1 in patches) {
-    console.log(ansiColors.bold(("\nLanguage: \"" + lang$1 + "\" changes report")));
+    if (patches[lang$1].length > 0) {
+      console.log(ansiColors.bold(("\nLanguage: \"" + lang$1 + "\" changes report")));
+    }
 
     for (var i = 0; i < patches[lang$1].length; i++) {
       var patch$1 = patches[lang$1][i];
@@ -5225,7 +5227,10 @@ var i18n = function (options) {
     }
   }
 
-  console.log(ansiColors.bold(("\nJSON files in \"" + (Object.keys(patches).join(', ')) + "\" are updated to match base language " + baseLanguage)));
+  var patchedLanguages = Object.keys(patches);
+  if (patchedLanguages.length > 0) {
+    console.log(ansiColors.bold(("\nFiles at \"" + (patchedLanguages.join(', ')) + "\" are updated to match \"" + baseLanguage + "\"")));
+  }
 
   return result
 };

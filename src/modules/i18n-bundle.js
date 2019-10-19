@@ -73,7 +73,9 @@ const i18n = (options) => {
   console.log(colors.bold('\nLanguages found:'), colors.green(`${languageList}`))
 
   for (const lang in patches) {
-    console.log(colors.bold(`\nLanguage: "${lang}" changes report`))
+    if (patches[lang].length > 0) {
+      console.log(colors.bold(`\nLanguage: "${lang}" changes report`))
+    }
 
     for (let i = 0; i < patches[lang].length; i++) {
       const patch = patches[lang][i]
@@ -117,7 +119,10 @@ const i18n = (options) => {
     }
   }
 
-  console.log(colors.bold(`\nJSON files in "${Object.keys(patches).join(', ')}" are updated to match base language ${baseLanguage}`))
+  const patchedLanguages = Object.keys(patches)
+  if (patchedLanguages.length > 0) {
+    console.log(colors.bold(`\nFiles at "${patchedLanguages.join(', ')}" are updated to match "${baseLanguage}"`))
+  }
 
   return result
 }
