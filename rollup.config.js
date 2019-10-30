@@ -5,7 +5,8 @@ import buble from 'rollup-plugin-buble'
 import license from 'rollup-plugin-license'
 import filesize from 'rollup-plugin-filesize'
 import standard from 'rollup-plugin-standard'
-import builtins from 'builtin-modules'
+// import builtins from 'builtin-modules'
+import builtins from 'rollup-plugin-node-builtins'
 
 const packageJSON = require('./package.json')
 
@@ -17,9 +18,10 @@ const bundleName = config.name
 
 const defaultConfig = [{
   input: 'src/index.js',
-  external: builtins,
+  // external: builtins,
   plugins: [
     standard(),
+    builtins(),
     commonjs({
       include: 'node_modules/**',
       ignore: ['fs', 'stream', 'path', 'assert', 'util', 'os']

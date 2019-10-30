@@ -1,15 +1,11 @@
 /** @license
  * Autodesk rollup-plugin-app-utils
- * Date: 2019-10-19
+ * Date: 2019-10-30
  * License: Apache-2.0
  *
  * Bundled dependencies (npm packages): 
- * {"package":"ansi-colors@3.2.3","license":"MIT","link":"https://github.com/doowb/ansi-colors"}, {"package":"time-stamp@2.2.0","license":"MIT","link":"https://github.com/jonschlinkert/time-stamp"}, {"package":"log-utils@1.0.0","license":"MIT","link":"https://github.com/jonschlinkert/log-utils"}, {"package":"universalify@0.1.2","license":"MIT","link":"https://github.com/RyanZim/universalify#readme"}, {"package":"graceful-fs@4.1.15","license":"ISC","link":"https://github.com/isaacs/node-graceful-fs#readme"}, {"package":"fs-extra@7.0.1","license":"MIT","link":"https://github.com/jprichardson/node-fs-extra"}, {"package":"jsonfile@4.0.0","license":"MIT","link":"https://github.com/jprichardson/node-jsonfile#readme"}, {"package":"string-template@1.0.0","license":"MIT","link":"https://github.com/Matt-Esch/string-template"}, {"package":"rfc6902@3.0.4","license":"MIT","link":"https://github.com/chbrown/rfc6902"}, {"package":"object-path@0.11.4","license":"MIT","link":"https://github.com/mariocasciaro/object-path"}
+ * {"package":"ansi-colors@3.2.3","license":"MIT","link":"https://github.com/doowb/ansi-colors"}, {"package":"time-stamp@2.2.0","license":"MIT","link":"https://github.com/jonschlinkert/time-stamp"}, {"package":"log-utils@1.0.0","license":"MIT","link":"https://github.com/jonschlinkert/log-utils"}, {"package":"universalify@0.1.2","license":"MIT","link":"https://github.com/RyanZim/universalify#readme"}, {"package":"rollup-plugin-node-builtins@2.1.2","license":"ISC","link":"https://github.com/calvinmetcalf/rollup-plugin-node-builtins#readme"}, {"package":"graceful-fs@4.1.15","license":"ISC","link":"https://github.com/isaacs/node-graceful-fs#readme"}, {"package":"fs-extra@7.0.1","license":"MIT","link":"https://github.com/jprichardson/node-fs-extra"}, {"package":"jsonfile@4.0.0","license":"MIT","link":"https://github.com/jprichardson/node-jsonfile#readme"}, {"package":"string-template@1.0.0","license":"MIT","link":"https://github.com/Matt-Esch/string-template"}, {"package":"rfc6902@3.0.4","license":"MIT","link":"https://github.com/chbrown/rfc6902"}, {"package":"object-path@0.11.4","license":"MIT","link":"https://github.com/mariocasciaro/object-path"}
  */
-import constants from 'constants';
-import fs from 'fs';
-import path from 'path';
-
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 function unwrapExports (x) {
@@ -385,6 +381,431 @@ var universalify = {
 	fromPromise: fromPromise
 };
 
+var E2BIG = 7;
+var EACCES = 13;
+var EADDRINUSE = 48;
+var EADDRNOTAVAIL = 49;
+var EAFNOSUPPORT = 47;
+var EAGAIN = 35;
+var EALREADY = 37;
+var EBADF = 9;
+var EBADMSG = 94;
+var EBUSY = 16;
+var ECANCELED = 89;
+var ECHILD = 10;
+var ECONNABORTED = 53;
+var ECONNREFUSED = 61;
+var ECONNRESET = 54;
+var EDEADLK = 11;
+var EDESTADDRREQ = 39;
+var EDOM = 33;
+var EDQUOT = 69;
+var EEXIST = 17;
+var EFAULT = 14;
+var EFBIG = 27;
+var EHOSTUNREACH = 65;
+var EIDRM = 90;
+var EILSEQ = 92;
+var EINPROGRESS = 36;
+var EINTR = 4;
+var EINVAL = 22;
+var EIO = 5;
+var EISCONN = 56;
+var EISDIR = 21;
+var ELOOP = 62;
+var EMFILE = 24;
+var EMLINK = 31;
+var EMSGSIZE = 40;
+var EMULTIHOP = 95;
+var ENAMETOOLONG = 63;
+var ENETDOWN = 50;
+var ENETRESET = 52;
+var ENETUNREACH = 51;
+var ENFILE = 23;
+var ENOBUFS = 55;
+var ENODATA = 96;
+var ENODEV = 19;
+var ENOENT = 2;
+var ENOEXEC = 8;
+var ENOLCK = 77;
+var ENOLINK = 97;
+var ENOMEM = 12;
+var ENOMSG = 91;
+var ENOPROTOOPT = 42;
+var ENOSPC = 28;
+var ENOSR = 98;
+var ENOSTR = 99;
+var ENOSYS = 78;
+var ENOTCONN = 57;
+var ENOTDIR = 20;
+var ENOTEMPTY = 66;
+var ENOTSOCK = 38;
+var ENOTSUP = 45;
+var ENOTTY = 25;
+var ENXIO = 6;
+var EOPNOTSUPP = 102;
+var EOVERFLOW = 84;
+var EPERM = 1;
+var EPIPE = 32;
+var EPROTO = 100;
+var EPROTONOSUPPORT = 43;
+var EPROTOTYPE = 41;
+var ERANGE = 34;
+var EROFS = 30;
+var ESPIPE = 29;
+var ESRCH = 3;
+var ESTALE = 70;
+var ETIME = 101;
+var ETIMEDOUT = 60;
+var ETXTBSY = 26;
+var EWOULDBLOCK = 35;
+var EXDEV = 18;
+var SIGHUP = 1;
+var SIGINT = 2;
+var SIGQUIT = 3;
+var SIGILL = 4;
+var SIGTRAP = 5;
+var SIGABRT = 6;
+var SIGIOT = 6;
+var SIGBUS = 10;
+var SIGFPE = 8;
+var SIGKILL = 9;
+var SIGUSR1 = 30;
+var SIGSEGV = 11;
+var SIGUSR2 = 31;
+var SIGPIPE = 13;
+var SIGALRM = 14;
+var SIGTERM = 15;
+var SIGCHLD = 20;
+var SIGCONT = 19;
+var SIGSTOP = 17;
+var SIGTSTP = 18;
+var SIGTTIN = 21;
+var SIGTTOU = 22;
+var SIGURG = 16;
+var SIGXCPU = 24;
+var SIGXFSZ = 25;
+var SIGVTALRM = 26;
+var SIGPROF = 27;
+var SIGWINCH = 28;
+var SIGIO = 23;
+var SIGINFO = 29;
+var SIGSYS = 12;
+var O_RDONLY = 0;
+var O_WRONLY = 1;
+var O_RDWR = 2;
+var S_IFMT = 61440;
+var S_IFREG = 32768;
+var S_IFDIR = 16384;
+var S_IFCHR = 8192;
+var S_IFBLK = 24576;
+var S_IFIFO = 4096;
+var S_IFLNK = 40960;
+var S_IFSOCK = 49152;
+var O_CREAT = 512;
+var O_EXCL = 2048;
+var O_NOCTTY = 131072;
+var O_TRUNC = 1024;
+var O_APPEND = 8;
+var O_DIRECTORY = 1048576;
+var O_NOFOLLOW = 256;
+var O_SYNC = 128;
+var O_SYMLINK = 2097152;
+var O_NONBLOCK = 4;
+var S_IRWXU = 448;
+var S_IRUSR = 256;
+var S_IWUSR = 128;
+var S_IXUSR = 64;
+var S_IRWXG = 56;
+var S_IRGRP = 32;
+var S_IWGRP = 16;
+var S_IXGRP = 8;
+var S_IRWXO = 7;
+var S_IROTH = 4;
+var S_IWOTH = 2;
+var S_IXOTH = 1;
+var F_OK = 0;
+var R_OK = 4;
+var W_OK = 2;
+var X_OK = 1;
+var SSL_OP_ALL = 2147486719;
+var SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION = 262144;
+var SSL_OP_CIPHER_SERVER_PREFERENCE = 4194304;
+var SSL_OP_CISCO_ANYCONNECT = 32768;
+var SSL_OP_COOKIE_EXCHANGE = 8192;
+var SSL_OP_CRYPTOPRO_TLSEXT_BUG = 2147483648;
+var SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS = 2048;
+var SSL_OP_EPHEMERAL_RSA = 0;
+var SSL_OP_LEGACY_SERVER_CONNECT = 4;
+var SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER = 32;
+var SSL_OP_MICROSOFT_SESS_ID_BUG = 1;
+var SSL_OP_MSIE_SSLV2_RSA_PADDING = 0;
+var SSL_OP_NETSCAPE_CA_DN_BUG = 536870912;
+var SSL_OP_NETSCAPE_CHALLENGE_BUG = 2;
+var SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG = 1073741824;
+var SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG = 8;
+var SSL_OP_NO_COMPRESSION = 131072;
+var SSL_OP_NO_QUERY_MTU = 4096;
+var SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION = 65536;
+var SSL_OP_NO_SSLv2 = 16777216;
+var SSL_OP_NO_SSLv3 = 33554432;
+var SSL_OP_NO_TICKET = 16384;
+var SSL_OP_NO_TLSv1 = 67108864;
+var SSL_OP_NO_TLSv1_1 = 268435456;
+var SSL_OP_NO_TLSv1_2 = 134217728;
+var SSL_OP_PKCS1_CHECK_1 = 0;
+var SSL_OP_PKCS1_CHECK_2 = 0;
+var SSL_OP_SINGLE_DH_USE = 1048576;
+var SSL_OP_SINGLE_ECDH_USE = 524288;
+var SSL_OP_SSLEAY_080_CLIENT_DH_BUG = 128;
+var SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG = 0;
+var SSL_OP_TLS_BLOCK_PADDING_BUG = 512;
+var SSL_OP_TLS_D5_BUG = 256;
+var SSL_OP_TLS_ROLLBACK_BUG = 8388608;
+var ENGINE_METHOD_RSA = 1;
+var ENGINE_METHOD_DSA = 2;
+var ENGINE_METHOD_DH = 4;
+var ENGINE_METHOD_RAND = 8;
+var ENGINE_METHOD_ECDH = 16;
+var ENGINE_METHOD_ECDSA = 32;
+var ENGINE_METHOD_CIPHERS = 64;
+var ENGINE_METHOD_DIGESTS = 128;
+var ENGINE_METHOD_STORE = 256;
+var ENGINE_METHOD_PKEY_METHS = 512;
+var ENGINE_METHOD_PKEY_ASN1_METHS = 1024;
+var ENGINE_METHOD_ALL = 65535;
+var ENGINE_METHOD_NONE = 0;
+var DH_CHECK_P_NOT_SAFE_PRIME = 2;
+var DH_CHECK_P_NOT_PRIME = 1;
+var DH_UNABLE_TO_CHECK_GENERATOR = 4;
+var DH_NOT_SUITABLE_GENERATOR = 8;
+var NPN_ENABLED = 1;
+var ALPN_ENABLED = 1;
+var RSA_PKCS1_PADDING = 1;
+var RSA_SSLV23_PADDING = 2;
+var RSA_NO_PADDING = 3;
+var RSA_PKCS1_OAEP_PADDING = 4;
+var RSA_X931_PADDING = 5;
+var RSA_PKCS1_PSS_PADDING = 6;
+var POINT_CONVERSION_COMPRESSED = 2;
+var POINT_CONVERSION_UNCOMPRESSED = 4;
+var POINT_CONVERSION_HYBRID = 6;
+var defaultCoreCipherList = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA256:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!SRP:!CAMELLIA";
+var defaultCipherList = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA256:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!SRP:!CAMELLIA";
+var constants = {
+  E2BIG: E2BIG,
+  EACCES: EACCES,
+  EADDRINUSE: EADDRINUSE,
+  EADDRNOTAVAIL: EADDRNOTAVAIL,
+  EAFNOSUPPORT: EAFNOSUPPORT,
+  EAGAIN: EAGAIN,
+  EALREADY: EALREADY,
+  EBADF: EBADF,
+  EBADMSG: EBADMSG,
+  EBUSY: EBUSY,
+  ECANCELED: ECANCELED,
+  ECHILD: ECHILD,
+  ECONNABORTED: ECONNABORTED,
+  ECONNREFUSED: ECONNREFUSED,
+  ECONNRESET: ECONNRESET,
+  EDEADLK: EDEADLK,
+  EDESTADDRREQ: EDESTADDRREQ,
+  EDOM: EDOM,
+  EDQUOT: EDQUOT,
+  EEXIST: EEXIST,
+  EFAULT: EFAULT,
+  EFBIG: EFBIG,
+  EHOSTUNREACH: EHOSTUNREACH,
+  EIDRM: EIDRM,
+  EILSEQ: EILSEQ,
+  EINPROGRESS: EINPROGRESS,
+  EINTR: EINTR,
+  EINVAL: EINVAL,
+  EIO: EIO,
+  EISCONN: EISCONN,
+  EISDIR: EISDIR,
+  ELOOP: ELOOP,
+  EMFILE: EMFILE,
+  EMLINK: EMLINK,
+  EMSGSIZE: EMSGSIZE,
+  EMULTIHOP: EMULTIHOP,
+  ENAMETOOLONG: ENAMETOOLONG,
+  ENETDOWN: ENETDOWN,
+  ENETRESET: ENETRESET,
+  ENETUNREACH: ENETUNREACH,
+  ENFILE: ENFILE,
+  ENOBUFS: ENOBUFS,
+  ENODATA: ENODATA,
+  ENODEV: ENODEV,
+  ENOENT: ENOENT,
+  ENOEXEC: ENOEXEC,
+  ENOLCK: ENOLCK,
+  ENOLINK: ENOLINK,
+  ENOMEM: ENOMEM,
+  ENOMSG: ENOMSG,
+  ENOPROTOOPT: ENOPROTOOPT,
+  ENOSPC: ENOSPC,
+  ENOSR: ENOSR,
+  ENOSTR: ENOSTR,
+  ENOSYS: ENOSYS,
+  ENOTCONN: ENOTCONN,
+  ENOTDIR: ENOTDIR,
+  ENOTEMPTY: ENOTEMPTY,
+  ENOTSOCK: ENOTSOCK,
+  ENOTSUP: ENOTSUP,
+  ENOTTY: ENOTTY,
+  ENXIO: ENXIO,
+  EOPNOTSUPP: EOPNOTSUPP,
+  EOVERFLOW: EOVERFLOW,
+  EPERM: EPERM,
+  EPIPE: EPIPE,
+  EPROTO: EPROTO,
+  EPROTONOSUPPORT: EPROTONOSUPPORT,
+  EPROTOTYPE: EPROTOTYPE,
+  ERANGE: ERANGE,
+  EROFS: EROFS,
+  ESPIPE: ESPIPE,
+  ESRCH: ESRCH,
+  ESTALE: ESTALE,
+  ETIME: ETIME,
+  ETIMEDOUT: ETIMEDOUT,
+  ETXTBSY: ETXTBSY,
+  EWOULDBLOCK: EWOULDBLOCK,
+  EXDEV: EXDEV,
+  SIGHUP: SIGHUP,
+  SIGINT: SIGINT,
+  SIGQUIT: SIGQUIT,
+  SIGILL: SIGILL,
+  SIGTRAP: SIGTRAP,
+  SIGABRT: SIGABRT,
+  SIGIOT: SIGIOT,
+  SIGBUS: SIGBUS,
+  SIGFPE: SIGFPE,
+  SIGKILL: SIGKILL,
+  SIGUSR1: SIGUSR1,
+  SIGSEGV: SIGSEGV,
+  SIGUSR2: SIGUSR2,
+  SIGPIPE: SIGPIPE,
+  SIGALRM: SIGALRM,
+  SIGTERM: SIGTERM,
+  SIGCHLD: SIGCHLD,
+  SIGCONT: SIGCONT,
+  SIGSTOP: SIGSTOP,
+  SIGTSTP: SIGTSTP,
+  SIGTTIN: SIGTTIN,
+  SIGTTOU: SIGTTOU,
+  SIGURG: SIGURG,
+  SIGXCPU: SIGXCPU,
+  SIGXFSZ: SIGXFSZ,
+  SIGVTALRM: SIGVTALRM,
+  SIGPROF: SIGPROF,
+  SIGWINCH: SIGWINCH,
+  SIGIO: SIGIO,
+  SIGINFO: SIGINFO,
+  SIGSYS: SIGSYS,
+  O_RDONLY: O_RDONLY,
+  O_WRONLY: O_WRONLY,
+  O_RDWR: O_RDWR,
+  S_IFMT: S_IFMT,
+  S_IFREG: S_IFREG,
+  S_IFDIR: S_IFDIR,
+  S_IFCHR: S_IFCHR,
+  S_IFBLK: S_IFBLK,
+  S_IFIFO: S_IFIFO,
+  S_IFLNK: S_IFLNK,
+  S_IFSOCK: S_IFSOCK,
+  O_CREAT: O_CREAT,
+  O_EXCL: O_EXCL,
+  O_NOCTTY: O_NOCTTY,
+  O_TRUNC: O_TRUNC,
+  O_APPEND: O_APPEND,
+  O_DIRECTORY: O_DIRECTORY,
+  O_NOFOLLOW: O_NOFOLLOW,
+  O_SYNC: O_SYNC,
+  O_SYMLINK: O_SYMLINK,
+  O_NONBLOCK: O_NONBLOCK,
+  S_IRWXU: S_IRWXU,
+  S_IRUSR: S_IRUSR,
+  S_IWUSR: S_IWUSR,
+  S_IXUSR: S_IXUSR,
+  S_IRWXG: S_IRWXG,
+  S_IRGRP: S_IRGRP,
+  S_IWGRP: S_IWGRP,
+  S_IXGRP: S_IXGRP,
+  S_IRWXO: S_IRWXO,
+  S_IROTH: S_IROTH,
+  S_IWOTH: S_IWOTH,
+  S_IXOTH: S_IXOTH,
+  F_OK: F_OK,
+  R_OK: R_OK,
+  W_OK: W_OK,
+  X_OK: X_OK,
+  SSL_OP_ALL: SSL_OP_ALL,
+  SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION: SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION,
+  SSL_OP_CIPHER_SERVER_PREFERENCE: SSL_OP_CIPHER_SERVER_PREFERENCE,
+  SSL_OP_CISCO_ANYCONNECT: SSL_OP_CISCO_ANYCONNECT,
+  SSL_OP_COOKIE_EXCHANGE: SSL_OP_COOKIE_EXCHANGE,
+  SSL_OP_CRYPTOPRO_TLSEXT_BUG: SSL_OP_CRYPTOPRO_TLSEXT_BUG,
+  SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS: SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS,
+  SSL_OP_EPHEMERAL_RSA: SSL_OP_EPHEMERAL_RSA,
+  SSL_OP_LEGACY_SERVER_CONNECT: SSL_OP_LEGACY_SERVER_CONNECT,
+  SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER: SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER,
+  SSL_OP_MICROSOFT_SESS_ID_BUG: SSL_OP_MICROSOFT_SESS_ID_BUG,
+  SSL_OP_MSIE_SSLV2_RSA_PADDING: SSL_OP_MSIE_SSLV2_RSA_PADDING,
+  SSL_OP_NETSCAPE_CA_DN_BUG: SSL_OP_NETSCAPE_CA_DN_BUG,
+  SSL_OP_NETSCAPE_CHALLENGE_BUG: SSL_OP_NETSCAPE_CHALLENGE_BUG,
+  SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG: SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG,
+  SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG: SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG,
+  SSL_OP_NO_COMPRESSION: SSL_OP_NO_COMPRESSION,
+  SSL_OP_NO_QUERY_MTU: SSL_OP_NO_QUERY_MTU,
+  SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION: SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION,
+  SSL_OP_NO_SSLv2: SSL_OP_NO_SSLv2,
+  SSL_OP_NO_SSLv3: SSL_OP_NO_SSLv3,
+  SSL_OP_NO_TICKET: SSL_OP_NO_TICKET,
+  SSL_OP_NO_TLSv1: SSL_OP_NO_TLSv1,
+  SSL_OP_NO_TLSv1_1: SSL_OP_NO_TLSv1_1,
+  SSL_OP_NO_TLSv1_2: SSL_OP_NO_TLSv1_2,
+  SSL_OP_PKCS1_CHECK_1: SSL_OP_PKCS1_CHECK_1,
+  SSL_OP_PKCS1_CHECK_2: SSL_OP_PKCS1_CHECK_2,
+  SSL_OP_SINGLE_DH_USE: SSL_OP_SINGLE_DH_USE,
+  SSL_OP_SINGLE_ECDH_USE: SSL_OP_SINGLE_ECDH_USE,
+  SSL_OP_SSLEAY_080_CLIENT_DH_BUG: SSL_OP_SSLEAY_080_CLIENT_DH_BUG,
+  SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG: SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG,
+  SSL_OP_TLS_BLOCK_PADDING_BUG: SSL_OP_TLS_BLOCK_PADDING_BUG,
+  SSL_OP_TLS_D5_BUG: SSL_OP_TLS_D5_BUG,
+  SSL_OP_TLS_ROLLBACK_BUG: SSL_OP_TLS_ROLLBACK_BUG,
+  ENGINE_METHOD_RSA: ENGINE_METHOD_RSA,
+  ENGINE_METHOD_DSA: ENGINE_METHOD_DSA,
+  ENGINE_METHOD_DH: ENGINE_METHOD_DH,
+  ENGINE_METHOD_RAND: ENGINE_METHOD_RAND,
+  ENGINE_METHOD_ECDH: ENGINE_METHOD_ECDH,
+  ENGINE_METHOD_ECDSA: ENGINE_METHOD_ECDSA,
+  ENGINE_METHOD_CIPHERS: ENGINE_METHOD_CIPHERS,
+  ENGINE_METHOD_DIGESTS: ENGINE_METHOD_DIGESTS,
+  ENGINE_METHOD_STORE: ENGINE_METHOD_STORE,
+  ENGINE_METHOD_PKEY_METHS: ENGINE_METHOD_PKEY_METHS,
+  ENGINE_METHOD_PKEY_ASN1_METHS: ENGINE_METHOD_PKEY_ASN1_METHS,
+  ENGINE_METHOD_ALL: ENGINE_METHOD_ALL,
+  ENGINE_METHOD_NONE: ENGINE_METHOD_NONE,
+  DH_CHECK_P_NOT_SAFE_PRIME: DH_CHECK_P_NOT_SAFE_PRIME,
+  DH_CHECK_P_NOT_PRIME: DH_CHECK_P_NOT_PRIME,
+  DH_UNABLE_TO_CHECK_GENERATOR: DH_UNABLE_TO_CHECK_GENERATOR,
+  DH_NOT_SUITABLE_GENERATOR: DH_NOT_SUITABLE_GENERATOR,
+  NPN_ENABLED: NPN_ENABLED,
+  ALPN_ENABLED: ALPN_ENABLED,
+  RSA_PKCS1_PADDING: RSA_PKCS1_PADDING,
+  RSA_SSLV23_PADDING: RSA_SSLV23_PADDING,
+  RSA_NO_PADDING: RSA_NO_PADDING,
+  RSA_PKCS1_OAEP_PADDING: RSA_PKCS1_OAEP_PADDING,
+  RSA_X931_PADDING: RSA_X931_PADDING,
+  RSA_PKCS1_PSS_PADDING: RSA_PKCS1_PSS_PADDING,
+  POINT_CONVERSION_COMPRESSED: POINT_CONVERSION_COMPRESSED,
+  POINT_CONVERSION_UNCOMPRESSED: POINT_CONVERSION_UNCOMPRESSED,
+  POINT_CONVERSION_HYBRID: POINT_CONVERSION_HYBRID,
+  defaultCoreCipherList: defaultCoreCipherList,
+  defaultCipherList: defaultCipherList
+};
+
 var origCwd = process.cwd;
 var cwd = null;
 
@@ -407,19 +828,19 @@ process.chdir = function(d) {
 
 var polyfills = patch;
 
-function patch (fs$$1) {
+function patch (fs) {
   // (re-)implement some things that are known busted or missing.
 
   // lchmod, broken prior to 0.6.2
   // back-port the fix here.
   if (constants.hasOwnProperty('O_SYMLINK') &&
       process.version.match(/^v0\.6\.[0-2]|^v0\.5\./)) {
-    patchLchmod(fs$$1);
+    patchLchmod(fs);
   }
 
   // lutimes implementation, or no-op
-  if (!fs$$1.lutimes) {
-    patchLutimes(fs$$1);
+  if (!fs.lutimes) {
+    patchLutimes(fs);
   }
 
   // https://github.com/isaacs/node-graceful-fs/issues/4
@@ -427,42 +848,42 @@ function patch (fs$$1) {
   // It should not fail on enosys ever, as this just indicates
   // that a fs doesn't support the intended operation.
 
-  fs$$1.chown = chownFix(fs$$1.chown);
-  fs$$1.fchown = chownFix(fs$$1.fchown);
-  fs$$1.lchown = chownFix(fs$$1.lchown);
+  fs.chown = chownFix(fs.chown);
+  fs.fchown = chownFix(fs.fchown);
+  fs.lchown = chownFix(fs.lchown);
 
-  fs$$1.chmod = chmodFix(fs$$1.chmod);
-  fs$$1.fchmod = chmodFix(fs$$1.fchmod);
-  fs$$1.lchmod = chmodFix(fs$$1.lchmod);
+  fs.chmod = chmodFix(fs.chmod);
+  fs.fchmod = chmodFix(fs.fchmod);
+  fs.lchmod = chmodFix(fs.lchmod);
 
-  fs$$1.chownSync = chownFixSync(fs$$1.chownSync);
-  fs$$1.fchownSync = chownFixSync(fs$$1.fchownSync);
-  fs$$1.lchownSync = chownFixSync(fs$$1.lchownSync);
+  fs.chownSync = chownFixSync(fs.chownSync);
+  fs.fchownSync = chownFixSync(fs.fchownSync);
+  fs.lchownSync = chownFixSync(fs.lchownSync);
 
-  fs$$1.chmodSync = chmodFixSync(fs$$1.chmodSync);
-  fs$$1.fchmodSync = chmodFixSync(fs$$1.fchmodSync);
-  fs$$1.lchmodSync = chmodFixSync(fs$$1.lchmodSync);
+  fs.chmodSync = chmodFixSync(fs.chmodSync);
+  fs.fchmodSync = chmodFixSync(fs.fchmodSync);
+  fs.lchmodSync = chmodFixSync(fs.lchmodSync);
 
-  fs$$1.stat = statFix(fs$$1.stat);
-  fs$$1.fstat = statFix(fs$$1.fstat);
-  fs$$1.lstat = statFix(fs$$1.lstat);
+  fs.stat = statFix(fs.stat);
+  fs.fstat = statFix(fs.fstat);
+  fs.lstat = statFix(fs.lstat);
 
-  fs$$1.statSync = statFixSync(fs$$1.statSync);
-  fs$$1.fstatSync = statFixSync(fs$$1.fstatSync);
-  fs$$1.lstatSync = statFixSync(fs$$1.lstatSync);
+  fs.statSync = statFixSync(fs.statSync);
+  fs.fstatSync = statFixSync(fs.fstatSync);
+  fs.lstatSync = statFixSync(fs.lstatSync);
 
   // if lchmod/lchown do not exist, then make them no-ops
-  if (!fs$$1.lchmod) {
-    fs$$1.lchmod = function (path$$1, mode, cb) {
+  if (!fs.lchmod) {
+    fs.lchmod = function (path, mode, cb) {
       if (cb) { process.nextTick(cb); }
     };
-    fs$$1.lchmodSync = function () {};
+    fs.lchmodSync = function () {};
   }
-  if (!fs$$1.lchown) {
-    fs$$1.lchown = function (path$$1, uid, gid, cb) {
+  if (!fs.lchown) {
+    fs.lchown = function (path, uid, gid, cb) {
       if (cb) { process.nextTick(cb); }
     };
-    fs$$1.lchownSync = function () {};
+    fs.lchownSync = function () {};
   }
 
   // on Windows, A/V software can lock the directory, causing this
@@ -475,7 +896,7 @@ function patch (fs$$1) {
   // CPU to a busy looping process, which can cause the program causing the lock
   // contention to be starved of CPU by node, so the contention doesn't resolve.
   if (platform === "win32") {
-    fs$$1.rename = (function (fs$rename) { return function (from, to, cb) {
+    fs.rename = (function (fs$rename) { return function (from, to, cb) {
       var start = Date.now();
       var backoff = 0;
       fs$rename(from, to, function CB (er) {
@@ -483,7 +904,7 @@ function patch (fs$$1) {
             && (er.code === "EACCES" || er.code === "EPERM")
             && Date.now() - start < 60000) {
           setTimeout(function() {
-            fs$$1.stat(to, function (stater, st) {
+            fs.stat(to, function (stater, st) {
               if (stater && stater.code === "ENOENT")
                 { fs$rename(from, to, CB); }
               else
@@ -496,30 +917,30 @@ function patch (fs$$1) {
         }
         if (cb) { cb(er); }
       });
-    }})(fs$$1.rename);
+    }})(fs.rename);
   }
 
   // if read() returns EAGAIN, then just try it again.
-  fs$$1.read = (function (fs$read) { return function (fd, buffer, offset, length, position, callback_) {
+  fs.read = (function (fs$read) { return function (fd, buffer, offset, length, position, callback_) {
     var callback;
     if (callback_ && typeof callback_ === 'function') {
       var eagCounter = 0;
       callback = function (er, _, __) {
         if (er && er.code === 'EAGAIN' && eagCounter < 10) {
           eagCounter ++;
-          return fs$read.call(fs$$1, fd, buffer, offset, length, position, callback)
+          return fs$read.call(fs, fd, buffer, offset, length, position, callback)
         }
         callback_.apply(this, arguments);
       };
     }
-    return fs$read.call(fs$$1, fd, buffer, offset, length, position, callback)
-  }})(fs$$1.read);
+    return fs$read.call(fs, fd, buffer, offset, length, position, callback)
+  }})(fs.read);
 
-  fs$$1.readSync = (function (fs$readSync) { return function (fd, buffer, offset, length, position) {
+  fs.readSync = (function (fs$readSync) { return function (fd, buffer, offset, length, position) {
     var eagCounter = 0;
     while (true) {
       try {
-        return fs$readSync.call(fs$$1, fd, buffer, offset, length, position)
+        return fs$readSync.call(fs, fd, buffer, offset, length, position)
       } catch (er) {
         if (er.code === 'EAGAIN' && eagCounter < 10) {
           eagCounter ++;
@@ -528,11 +949,11 @@ function patch (fs$$1) {
         throw er
       }
     }
-  }})(fs$$1.readSync);
+  }})(fs.readSync);
 
-  function patchLchmod (fs$$1) {
-    fs$$1.lchmod = function (path$$1, mode, callback) {
-      fs$$1.open( path$$1
+  function patchLchmod (fs) {
+    fs.lchmod = function (path, mode, callback) {
+      fs.open( path
              , constants.O_WRONLY | constants.O_SYMLINK
              , mode
              , function (err, fd) {
@@ -542,82 +963,82 @@ function patch (fs$$1) {
         }
         // prefer to return the chmod error, if one occurs,
         // but still try to close, and report closing errors if they occur.
-        fs$$1.fchmod(fd, mode, function (err) {
-          fs$$1.close(fd, function(err2) {
+        fs.fchmod(fd, mode, function (err) {
+          fs.close(fd, function(err2) {
             if (callback) { callback(err || err2); }
           });
         });
       });
     };
 
-    fs$$1.lchmodSync = function (path$$1, mode) {
-      var fd = fs$$1.openSync(path$$1, constants.O_WRONLY | constants.O_SYMLINK, mode);
+    fs.lchmodSync = function (path, mode) {
+      var fd = fs.openSync(path, constants.O_WRONLY | constants.O_SYMLINK, mode);
 
       // prefer to return the chmod error, if one occurs,
       // but still try to close, and report closing errors if they occur.
       var threw = true;
       var ret;
       try {
-        ret = fs$$1.fchmodSync(fd, mode);
+        ret = fs.fchmodSync(fd, mode);
         threw = false;
       } finally {
         if (threw) {
           try {
-            fs$$1.closeSync(fd);
+            fs.closeSync(fd);
           } catch (er) {}
         } else {
-          fs$$1.closeSync(fd);
+          fs.closeSync(fd);
         }
       }
       return ret
     };
   }
 
-  function patchLutimes (fs$$1) {
+  function patchLutimes (fs) {
     if (constants.hasOwnProperty("O_SYMLINK")) {
-      fs$$1.lutimes = function (path$$1, at, mt, cb) {
-        fs$$1.open(path$$1, constants.O_SYMLINK, function (er, fd) {
+      fs.lutimes = function (path, at, mt, cb) {
+        fs.open(path, constants.O_SYMLINK, function (er, fd) {
           if (er) {
             if (cb) { cb(er); }
             return
           }
-          fs$$1.futimes(fd, at, mt, function (er) {
-            fs$$1.close(fd, function (er2) {
+          fs.futimes(fd, at, mt, function (er) {
+            fs.close(fd, function (er2) {
               if (cb) { cb(er || er2); }
             });
           });
         });
       };
 
-      fs$$1.lutimesSync = function (path$$1, at, mt) {
-        var fd = fs$$1.openSync(path$$1, constants.O_SYMLINK);
+      fs.lutimesSync = function (path, at, mt) {
+        var fd = fs.openSync(path, constants.O_SYMLINK);
         var ret;
         var threw = true;
         try {
-          ret = fs$$1.futimesSync(fd, at, mt);
+          ret = fs.futimesSync(fd, at, mt);
           threw = false;
         } finally {
           if (threw) {
             try {
-              fs$$1.closeSync(fd);
+              fs.closeSync(fd);
             } catch (er) {}
           } else {
-            fs$$1.closeSync(fd);
+            fs.closeSync(fd);
           }
         }
         return ret
       };
 
     } else {
-      fs$$1.lutimes = function (_a, _b, _c, cb) { if (cb) { process.nextTick(cb); } };
-      fs$$1.lutimesSync = function () {};
+      fs.lutimes = function (_a, _b, _c, cb) { if (cb) { process.nextTick(cb); } };
+      fs.lutimesSync = function () {};
     }
   }
 
   function chmodFix (orig) {
     if (!orig) { return orig }
     return function (target, mode, cb) {
-      return orig.call(fs$$1, target, mode, function (er) {
+      return orig.call(fs, target, mode, function (er) {
         if (chownErOk(er)) { er = null; }
         if (cb) { cb.apply(this, arguments); }
       })
@@ -628,7 +1049,7 @@ function patch (fs$$1) {
     if (!orig) { return orig }
     return function (target, mode) {
       try {
-        return orig.call(fs$$1, target, mode)
+        return orig.call(fs, target, mode)
       } catch (er) {
         if (!chownErOk(er)) { throw er }
       }
@@ -639,7 +1060,7 @@ function patch (fs$$1) {
   function chownFix (orig) {
     if (!orig) { return orig }
     return function (target, uid, gid, cb) {
-      return orig.call(fs$$1, target, uid, gid, function (er) {
+      return orig.call(fs, target, uid, gid, function (er) {
         if (chownErOk(er)) { er = null; }
         if (cb) { cb.apply(this, arguments); }
       })
@@ -650,7 +1071,7 @@ function patch (fs$$1) {
     if (!orig) { return orig }
     return function (target, uid, gid) {
       try {
-        return orig.call(fs$$1, target, uid, gid)
+        return orig.call(fs, target, uid, gid)
       } catch (er) {
         if (!chownErOk(er)) { throw er }
       }
@@ -663,7 +1084,7 @@ function patch (fs$$1) {
     // Older versions of Node erroneously returned signed integers for
     // uid + gid.
     return function (target, cb) {
-      return orig.call(fs$$1, target, function (er, stats) {
+      return orig.call(fs, target, function (er, stats) {
         if (!stats) { return cb.apply(this, arguments) }
         if (stats.uid < 0) { stats.uid += 0x100000000; }
         if (stats.gid < 0) { stats.gid += 0x100000000; }
@@ -677,7 +1098,7 @@ function patch (fs$$1) {
     // Older versions of Node erroneously returned signed integers for
     // uid + gid.
     return function (target) {
-      var stats = orig.call(fs$$1, target);
+      var stats = orig.call(fs, target);
       if (stats.uid < 0) { stats.uid += 0x100000000; }
       if (stats.gid < 0) { stats.gid += 0x100000000; }
       return stats;
@@ -717,20 +1138,20 @@ var Stream = require('stream').Stream;
 
 var legacyStreams = legacy;
 
-function legacy (fs$$1) {
+function legacy (fs) {
   return {
     ReadStream: ReadStream,
     WriteStream: WriteStream
   }
 
-  function ReadStream (path$$1, options) {
-    if (!(this instanceof ReadStream)) { return new ReadStream(path$$1, options); }
+  function ReadStream (path, options) {
+    if (!(this instanceof ReadStream)) { return new ReadStream(path, options); }
 
     Stream.call(this);
 
     var self = this;
 
-    this.path = path$$1;
+    this.path = path;
     this.fd = null;
     this.readable = true;
     this.paused = false;
@@ -774,7 +1195,7 @@ function legacy (fs$$1) {
       return;
     }
 
-    fs$$1.open(this.path, this.flags, this.mode, function (err, fd) {
+    fs.open(this.path, this.flags, this.mode, function (err, fd) {
       if (err) {
         self.emit('error', err);
         self.readable = false;
@@ -787,12 +1208,12 @@ function legacy (fs$$1) {
     });
   }
 
-  function WriteStream (path$$1, options) {
-    if (!(this instanceof WriteStream)) { return new WriteStream(path$$1, options); }
+  function WriteStream (path, options) {
+    if (!(this instanceof WriteStream)) { return new WriteStream(path, options); }
 
     Stream.call(this);
 
-    this.path = path$$1;
+    this.path = path;
     this.fd = null;
     this.writable = true;
 
@@ -825,7 +1246,7 @@ function legacy (fs$$1) {
     this._queue = [];
 
     if (this.fd === null) {
-      this._open = fs$$1.open;
+      this._open = fs.open;
       this._queue.push([this._open, this.path, this.flags, this.mode, undefined]);
       this.flush();
     }
@@ -851,7 +1272,7 @@ function clone (obj) {
 }
 
 var gracefulFs = createCommonjsModule(function (module) {
-var fs$$1 = require('fs');
+var fs = require('fs');
 
 
 
@@ -879,10 +1300,10 @@ if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || '')) {
   });
 }
 
-module.exports = patch(clone_1(fs$$1));
-if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs$$1.__patched) {
-    module.exports = patch(fs$$1);
-    fs$$1.__patched = true;
+module.exports = patch(clone_1(fs));
+if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs.__patched) {
+    module.exports = patch(fs);
+    fs.__patched = true;
 }
 
 // Always patch fs.close/closeSync, because we want to
@@ -890,22 +1311,22 @@ if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs$$1.__patched) {
 // This is essential when multiple graceful-fs instances are
 // in play at the same time.
 module.exports.close = (function (fs$close) { return function (fd, cb) {
-  return fs$close.call(fs$$1, fd, function (err) {
+  return fs$close.call(fs, fd, function (err) {
     if (!err)
       { retry(); }
 
     if (typeof cb === 'function')
       { cb.apply(this, arguments); }
   })
-}})(fs$$1.close);
+}})(fs.close);
 
 module.exports.closeSync = (function (fs$closeSync) { return function (fd) {
   // Note that graceful-fs also retries when fs.closeSync() fails.
   // Looks like a bug to me, although it's probably a harmless one.
-  var rval = fs$closeSync.apply(fs$$1, arguments);
+  var rval = fs$closeSync.apply(fs, arguments);
   retry();
   return rval
-}})(fs$$1.closeSync);
+}})(fs.closeSync);
 
 // Only patch fs once, otherwise we'll run into a memory leak if
 // graceful-fs is loaded multiple times, such as in test environments that
@@ -913,31 +1334,31 @@ module.exports.closeSync = (function (fs$closeSync) { return function (fd) {
 // We look for the string `graceful-fs` from the comment above. This
 // way we are not adding any extra properties and it will detect if older
 // versions of graceful-fs are installed.
-if (!/\bgraceful-fs\b/.test(fs$$1.closeSync.toString())) {
-  fs$$1.closeSync = module.exports.closeSync;
-  fs$$1.close = module.exports.close;
+if (!/\bgraceful-fs\b/.test(fs.closeSync.toString())) {
+  fs.closeSync = module.exports.closeSync;
+  fs.close = module.exports.close;
 }
 
-function patch (fs$$1) {
+function patch (fs) {
   // Everything that references the open() function needs to be in here
-  polyfills(fs$$1);
-  fs$$1.gracefulify = patch;
-  fs$$1.FileReadStream = ReadStream;  // Legacy name.
-  fs$$1.FileWriteStream = WriteStream;  // Legacy name.
-  fs$$1.createReadStream = createReadStream;
-  fs$$1.createWriteStream = createWriteStream;
-  var fs$readFile = fs$$1.readFile;
-  fs$$1.readFile = readFile;
-  function readFile (path$$1, options, cb) {
+  polyfills(fs);
+  fs.gracefulify = patch;
+  fs.FileReadStream = ReadStream;  // Legacy name.
+  fs.FileWriteStream = WriteStream;  // Legacy name.
+  fs.createReadStream = createReadStream;
+  fs.createWriteStream = createWriteStream;
+  var fs$readFile = fs.readFile;
+  fs.readFile = readFile;
+  function readFile (path, options, cb) {
     if (typeof options === 'function')
       { cb = options, options = null; }
 
-    return go$readFile(path$$1, options, cb)
+    return go$readFile(path, options, cb)
 
-    function go$readFile (path$$1, options, cb) {
-      return fs$readFile(path$$1, options, function (err) {
+    function go$readFile (path, options, cb) {
+      return fs$readFile(path, options, function (err) {
         if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          { enqueue([go$readFile, [path$$1, options, cb]]); }
+          { enqueue([go$readFile, [path, options, cb]]); }
         else {
           if (typeof cb === 'function')
             { cb.apply(this, arguments); }
@@ -947,18 +1368,18 @@ function patch (fs$$1) {
     }
   }
 
-  var fs$writeFile = fs$$1.writeFile;
-  fs$$1.writeFile = writeFile;
-  function writeFile (path$$1, data, options, cb) {
+  var fs$writeFile = fs.writeFile;
+  fs.writeFile = writeFile;
+  function writeFile (path, data, options, cb) {
     if (typeof options === 'function')
       { cb = options, options = null; }
 
-    return go$writeFile(path$$1, data, options, cb)
+    return go$writeFile(path, data, options, cb)
 
-    function go$writeFile (path$$1, data, options, cb) {
-      return fs$writeFile(path$$1, data, options, function (err) {
+    function go$writeFile (path, data, options, cb) {
+      return fs$writeFile(path, data, options, function (err) {
         if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          { enqueue([go$writeFile, [path$$1, data, options, cb]]); }
+          { enqueue([go$writeFile, [path, data, options, cb]]); }
         else {
           if (typeof cb === 'function')
             { cb.apply(this, arguments); }
@@ -968,19 +1389,19 @@ function patch (fs$$1) {
     }
   }
 
-  var fs$appendFile = fs$$1.appendFile;
+  var fs$appendFile = fs.appendFile;
   if (fs$appendFile)
-    { fs$$1.appendFile = appendFile; }
-  function appendFile (path$$1, data, options, cb) {
+    { fs.appendFile = appendFile; }
+  function appendFile (path, data, options, cb) {
     if (typeof options === 'function')
       { cb = options, options = null; }
 
-    return go$appendFile(path$$1, data, options, cb)
+    return go$appendFile(path, data, options, cb)
 
-    function go$appendFile (path$$1, data, options, cb) {
-      return fs$appendFile(path$$1, data, options, function (err) {
+    function go$appendFile (path, data, options, cb) {
+      return fs$appendFile(path, data, options, function (err) {
         if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          { enqueue([go$appendFile, [path$$1, data, options, cb]]); }
+          { enqueue([go$appendFile, [path, data, options, cb]]); }
         else {
           if (typeof cb === 'function')
             { cb.apply(this, arguments); }
@@ -990,10 +1411,10 @@ function patch (fs$$1) {
     }
   }
 
-  var fs$readdir = fs$$1.readdir;
-  fs$$1.readdir = readdir;
-  function readdir (path$$1, options, cb) {
-    var args = [path$$1];
+  var fs$readdir = fs.readdir;
+  fs.readdir = readdir;
+  function readdir (path, options, cb) {
+    var args = [path];
     if (typeof options !== 'function') {
       args.push(options);
     } else {
@@ -1019,31 +1440,31 @@ function patch (fs$$1) {
   }
 
   function go$readdir (args) {
-    return fs$readdir.apply(fs$$1, args)
+    return fs$readdir.apply(fs, args)
   }
 
   if (process.version.substr(0, 4) === 'v0.8') {
-    var legStreams = legacyStreams(fs$$1);
+    var legStreams = legacyStreams(fs);
     ReadStream = legStreams.ReadStream;
     WriteStream = legStreams.WriteStream;
   }
 
-  var fs$ReadStream = fs$$1.ReadStream;
+  var fs$ReadStream = fs.ReadStream;
   if (fs$ReadStream) {
     ReadStream.prototype = Object.create(fs$ReadStream.prototype);
     ReadStream.prototype.open = ReadStream$open;
   }
 
-  var fs$WriteStream = fs$$1.WriteStream;
+  var fs$WriteStream = fs.WriteStream;
   if (fs$WriteStream) {
     WriteStream.prototype = Object.create(fs$WriteStream.prototype);
     WriteStream.prototype.open = WriteStream$open;
   }
 
-  fs$$1.ReadStream = ReadStream;
-  fs$$1.WriteStream = WriteStream;
+  fs.ReadStream = ReadStream;
+  fs.WriteStream = WriteStream;
 
-  function ReadStream (path$$1, options) {
+  function ReadStream (path, options) {
     if (this instanceof ReadStream)
       { return fs$ReadStream.apply(this, arguments), this }
     else
@@ -1066,7 +1487,7 @@ function patch (fs$$1) {
     });
   }
 
-  function WriteStream (path$$1, options) {
+  function WriteStream (path, options) {
     if (this instanceof WriteStream)
       { return fs$WriteStream.apply(this, arguments), this }
     else
@@ -1086,26 +1507,26 @@ function patch (fs$$1) {
     });
   }
 
-  function createReadStream (path$$1, options) {
-    return new ReadStream(path$$1, options)
+  function createReadStream (path, options) {
+    return new ReadStream(path, options)
   }
 
-  function createWriteStream (path$$1, options) {
-    return new WriteStream(path$$1, options)
+  function createWriteStream (path, options) {
+    return new WriteStream(path, options)
   }
 
-  var fs$open = fs$$1.open;
-  fs$$1.open = open;
-  function open (path$$1, flags, mode, cb) {
+  var fs$open = fs.open;
+  fs.open = open;
+  function open (path, flags, mode, cb) {
     if (typeof mode === 'function')
       { cb = mode, mode = null; }
 
-    return go$open(path$$1, flags, mode, cb)
+    return go$open(path, flags, mode, cb)
 
-    function go$open (path$$1, flags, mode, cb) {
-      return fs$open(path$$1, flags, mode, function (err, fd) {
+    function go$open (path, flags, mode, cb) {
+      return fs$open(path, flags, mode, function (err, fd) {
         if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          { enqueue([go$open, [path$$1, flags, mode, cb]]); }
+          { enqueue([go$open, [path, flags, mode, cb]]); }
         else {
           if (typeof cb === 'function')
             { cb.apply(this, arguments); }
@@ -1115,7 +1536,7 @@ function patch (fs$$1) {
     }
   }
 
-  return fs$$1
+  return fs
 }
 
 function enqueue (elem) {
@@ -1246,11 +1667,11 @@ var fs_2 = fs_1.exists;
 var fs_3 = fs_1.read;
 var fs_4 = fs_1.write;
 
-var path$1 = require('path');
+var path = require('path');
 
 // get drive on windows
 function getRootPath (p) {
-  p = path$1.normalize(path$1.resolve(p)).split(path$1.sep);
+  p = path.normalize(path.resolve(p)).split(path.sep);
   if (p.length > 0) { return p[0] }
   return null
 }
@@ -1270,7 +1691,7 @@ var win32 = {
   invalidWin32Path: invalidWin32Path
 };
 
-var path$2 = require('path');
+var path$1 = require('path');
 var invalidWin32Path$1 = win32.invalidWin32Path;
 
 var o777 = parseInt('0777', 8);
@@ -1298,7 +1719,7 @@ function mkdirs (p, opts, callback, made) {
   if (!made) { made = null; }
 
   callback = callback || function () {};
-  p = path$2.resolve(p);
+  p = path$1.resolve(p);
 
   xfs.mkdir(p, mode, function (er) {
     if (!er) {
@@ -1307,8 +1728,8 @@ function mkdirs (p, opts, callback, made) {
     }
     switch (er.code) {
       case 'ENOENT':
-        if (path$2.dirname(p) === p) { return callback(er) }
-        mkdirs(path$2.dirname(p), opts, function (er, made) {
+        if (path$1.dirname(p) === p) { return callback(er) }
+        mkdirs(path$1.dirname(p), opts, function (er, made) {
           if (er) { callback(er, made); }
           else { mkdirs(p, opts, callback, made); }
         });
@@ -1331,7 +1752,7 @@ function mkdirs (p, opts, callback, made) {
 
 var mkdirs_1 = mkdirs;
 
-var path$3 = require('path');
+var path$2 = require('path');
 var invalidWin32Path$2 = win32.invalidWin32Path;
 
 var o777$1 = parseInt('0777', 8);
@@ -1355,15 +1776,15 @@ function mkdirsSync (p, opts, made) {
   }
   if (!made) { made = null; }
 
-  p = path$3.resolve(p);
+  p = path$2.resolve(p);
 
   try {
     xfs.mkdirSync(p, mode);
     made = made || p;
   } catch (err0) {
     if (err0.code === 'ENOENT') {
-      if (path$3.dirname(p) === p) { throw err0 }
-      made = mkdirsSync(path$3.dirname(p), opts, made);
+      if (path$2.dirname(p) === p) { throw err0 }
+      made = mkdirsSync(path$2.dirname(p), opts, made);
       mkdirsSync(p, opts, made);
     } else {
       // In the case of any other error, just see if there's a dir there
@@ -1398,12 +1819,12 @@ var mkdirs_1$1 = {
 };
 
 var os = require('os');
-var path$4 = require('path');
+var path$3 = require('path');
 
 // HFS, ext{2,3}, FAT do not, Node.js v0.10 does not
 function hasMillisResSync () {
-  var tmpfile = path$4.join('millis-test-sync' + Date.now().toString() + Math.random().toString().slice(2));
-  tmpfile = path$4.join(os.tmpdir(), tmpfile);
+  var tmpfile = path$3.join('millis-test-sync' + Date.now().toString() + Math.random().toString().slice(2));
+  tmpfile = path$3.join(os.tmpdir(), tmpfile);
 
   // 550 millis past UNIX epoch
   var d = new Date(1435410243862);
@@ -1415,8 +1836,8 @@ function hasMillisResSync () {
 }
 
 function hasMillisRes (callback) {
-  var tmpfile = path$4.join('millis-test' + Date.now().toString() + Math.random().toString().slice(2));
-  tmpfile = path$4.join(os.tmpdir(), tmpfile);
+  var tmpfile = path$3.join('millis-test' + Date.now().toString() + Math.random().toString().slice(2));
+  tmpfile = path$3.join(os.tmpdir(), tmpfile);
 
   // 550 millis past UNIX epoch
   var d = new Date(1435410243862);
@@ -1448,9 +1869,9 @@ function timeRemoveMillis (timestamp) {
   }
 }
 
-function utimesMillis (path$$1, atime, mtime, callback) {
+function utimesMillis (path, atime, mtime, callback) {
   // if (!HAS_MILLIS_RES) return fs.utimes(path, atime, mtime, callback)
-  gracefulFs.open(path$$1, 'r+', function (err, fd) {
+  gracefulFs.open(path, 'r+', function (err, fd) {
     if (err) { return callback(err) }
     gracefulFs.futimes(fd, atime, mtime, function (futimesErr) {
       gracefulFs.close(fd, function (closeErr) {
@@ -1460,8 +1881,8 @@ function utimesMillis (path$$1, atime, mtime, callback) {
   });
 }
 
-function utimesMillisSync (path$$1, atime, mtime) {
-  var fd = gracefulFs.openSync(path$$1, 'r+');
+function utimesMillisSync (path, atime, mtime) {
+  var fd = gracefulFs.openSync(path, 'r+');
   gracefulFs.futimesSync(fd, atime, mtime);
   return gracefulFs.closeSync(fd)
 }
@@ -1486,7 +1907,7 @@ var buffer = function (size) {
   return new Buffer(size)
 };
 
-var path$5 = require('path');
+var path$4 = require('path');
 var mkdirpSync = mkdirs_1$1.mkdirsSync;
 var utimesSync = utimes.utimesMillisSync;
 
@@ -1510,7 +1931,7 @@ function copySync (src, dest, opts) {
 
   if (opts.filter && !opts.filter(src, dest)) { return }
 
-  var destParent = path$5.dirname(dest);
+  var destParent = path$4.dirname(dest);
   if (!gracefulFs.existsSync(destParent)) { mkdirpSync(destParent); }
   return startCopy(destStat, src, dest, opts)
 }
@@ -1596,8 +2017,8 @@ function copyDir (src, dest, opts) {
 }
 
 function copyDirItem (item, src, dest, opts) {
-  var srcItem = path$5.join(src, item);
-  var destItem = path$5.join(dest, item);
+  var srcItem = path$4.join(src, item);
+  var destItem = path$4.join(dest, item);
   var destStat = checkPaths(srcItem, destItem);
   return startCopy(destStat, srcItem, destItem, opts)
 }
@@ -1606,7 +2027,7 @@ function onLink (destStat, src, dest, opts) {
   var resolvedSrc = gracefulFs.readlinkSync(src);
 
   if (opts.dereference) {
-    resolvedSrc = path$5.resolve(process.cwd(), resolvedSrc);
+    resolvedSrc = path$4.resolve(process.cwd(), resolvedSrc);
   }
 
   if (destStat === notExist) {
@@ -1623,7 +2044,7 @@ function onLink (destStat, src, dest, opts) {
       throw err
     }
     if (opts.dereference) {
-      resolvedDest = path$5.resolve(process.cwd(), resolvedDest);
+      resolvedDest = path$4.resolve(process.cwd(), resolvedDest);
     }
     if (isSrcSubdir(resolvedSrc, resolvedDest)) {
       throw new Error(("Cannot copy '" + resolvedSrc + "' to a subdirectory of itself, '" + resolvedDest + "'."))
@@ -1646,8 +2067,8 @@ function copyLink (resolvedSrc, dest) {
 
 // return true if dest is a subdir of src, otherwise false.
 function isSrcSubdir (src, dest) {
-  var srcArray = path$5.resolve(src).split(path$5.sep);
-  var destArray = path$5.resolve(dest).split(path$5.sep);
+  var srcArray = path$4.resolve(src).split(path$4.sep);
+  var destArray = path$4.resolve(dest).split(path$4.sep);
   return srcArray.reduce(function (acc, current, i) { return acc && destArray[i] === current; }, true)
 }
 
@@ -1685,8 +2106,8 @@ var copySync$1 = {
 var u$1 = universalify.fromPromise;
 
 
-function pathExists (path$$1) {
-  return fs_1.access(path$$1).then(function () { return true; }).catch(function () { return false; })
+function pathExists (path) {
+  return fs_1.access(path).then(function () { return true; }).catch(function () { return false; })
 }
 
 var pathExists_1 = {
@@ -1694,7 +2115,7 @@ var pathExists_1 = {
   pathExistsSync: fs_1.existsSync
 };
 
-var path$6 = require('path');
+var path$5 = require('path');
 var mkdirp = mkdirs_1$1.mkdirs;
 var pathExists$1 = pathExists_1.pathExists;
 var utimes$1 = utimes.utimesMillis;
@@ -1728,7 +2149,7 @@ function copy (src, dest, opts, cb) {
 }
 
 function checkParentDir (destStat, src, dest, opts, cb) {
-  var destParent = path$6.dirname(dest);
+  var destParent = path$5.dirname(dest);
   pathExists$1(destParent, function (err, dirExists) {
     if (err) { return cb(err) }
     if (dirExists) { return startCopy$1(destStat, src, dest, opts, cb) }
@@ -1845,8 +2266,8 @@ function copyDirItems (items, src, dest, opts, cb) {
 }
 
 function copyDirItem$1 (items, item, src, dest, opts, cb) {
-  var srcItem = path$6.join(src, item);
-  var destItem = path$6.join(dest, item);
+  var srcItem = path$5.join(src, item);
+  var destItem = path$5.join(dest, item);
   checkPaths$1(srcItem, destItem, function (err, destStat) {
     if (err) { return cb(err) }
     startCopy$1(destStat, srcItem, destItem, opts, function (err) {
@@ -1861,7 +2282,7 @@ function onLink$1 (destStat, src, dest, opts, cb) {
     if (err) { return cb(err) }
 
     if (opts.dereference) {
-      resolvedSrc = path$6.resolve(process.cwd(), resolvedSrc);
+      resolvedSrc = path$5.resolve(process.cwd(), resolvedSrc);
     }
 
     if (destStat === notExist$1) {
@@ -1876,7 +2297,7 @@ function onLink$1 (destStat, src, dest, opts, cb) {
           return cb(err)
         }
         if (opts.dereference) {
-          resolvedDest = path$6.resolve(process.cwd(), resolvedDest);
+          resolvedDest = path$5.resolve(process.cwd(), resolvedDest);
         }
         if (isSrcSubdir$1(resolvedSrc, resolvedDest)) {
           return cb(new Error(("Cannot copy '" + resolvedSrc + "' to a subdirectory of itself, '" + resolvedDest + "'.")))
@@ -1903,8 +2324,8 @@ function copyLink$1 (resolvedSrc, dest, cb) {
 
 // return true if dest is a subdir of src, otherwise false.
 function isSrcSubdir$1 (src, dest) {
-  var srcArray = path$6.resolve(src).split(path$6.sep);
-  var destArray = path$6.resolve(dest).split(path$6.sep);
+  var srcArray = path$5.resolve(src).split(path$5.sep);
+  var destArray = path$5.resolve(dest).split(path$5.sep);
   return srcArray.reduce(function (acc, current, i) { return acc && destArray[i] === current; }, true)
 }
 
@@ -1943,7 +2364,7 @@ var copy$1 = {
   copy: u$2(copy_1)
 };
 
-var path$7 = require('path');
+var path$6 = require('path');
 var assert = require('assert');
 
 var isWindows = (process.platform === 'win32');
@@ -2148,7 +2569,7 @@ function rmkids (p, options, cb) {
     if (n === 0) { return options.rmdir(p, cb) }
 
     files.forEach(function (f) {
-      rimraf(path$7.join(p, f), options, function (er) {
+      rimraf(path$6.join(p, f), options, function (er) {
         if (errState) {
           return
         }
@@ -2230,7 +2651,7 @@ function rmdirSync (p, options, originalEr) {
 function rmkidsSync (p, options) {
   assert(p);
   assert(options);
-  options.readdirSync(p).forEach(function (f) { return rimrafSync(path$7.join(p, f), options); });
+  options.readdirSync(p).forEach(function (f) { return rimrafSync(path$6.join(p, f), options); });
 
   if (isWindows) {
     // We only end up here once we got ENOTEMPTY at least once, and
@@ -2264,17 +2685,17 @@ var remove = {
 };
 
 var u$4 = universalify.fromCallback;
-var fs$1 = require('fs');
-var path$8 = require('path');
+var fs = require('fs');
+var path$7 = require('path');
 
 
 
 var emptyDir = u$4(function emptyDir (dir, callback) {
   callback = callback || function () {};
-  fs$1.readdir(dir, function (err, items) {
+  fs.readdir(dir, function (err, items) {
     if (err) { return mkdirs_1$1.mkdirs(dir, callback) }
 
-    items = items.map(function (item) { return path$8.join(dir, item); });
+    items = items.map(function (item) { return path$7.join(dir, item); });
 
     deleteItem();
 
@@ -2292,13 +2713,13 @@ var emptyDir = u$4(function emptyDir (dir, callback) {
 function emptyDirSync (dir) {
   var items;
   try {
-    items = fs$1.readdirSync(dir);
+    items = fs.readdirSync(dir);
   } catch (err) {
     return mkdirs_1$1.mkdirsSync(dir)
   }
 
   items.forEach(function (item) {
-    item = path$8.join(dir, item);
+    item = path$7.join(dir, item);
     remove.removeSync(item);
   });
 }
@@ -2311,7 +2732,7 @@ var empty = {
 };
 
 var u$5 = universalify.fromCallback;
-var path$9 = require('path');
+var path$8 = require('path');
 
 
 var pathExists$2 = pathExists_1.pathExists;
@@ -2326,7 +2747,7 @@ function createFile (file, callback) {
 
   gracefulFs.stat(file, function (err, stats) { // eslint-disable-line handle-callback-err
     if (!err && stats.isFile()) { return callback() }
-    var dir = path$9.dirname(file);
+    var dir = path$8.dirname(file);
     pathExists$2(dir, function (err, dirExists) {
       if (err) { return callback(err) }
       if (dirExists) { return makeFile() }
@@ -2345,7 +2766,7 @@ function createFileSync (file) {
   } catch (e) {}
   if (stats && stats.isFile()) { return }
 
-  var dir = path$9.dirname(file);
+  var dir = path$8.dirname(file);
   if (!gracefulFs.existsSync(dir)) {
     mkdirs_1$1.mkdirsSync(dir);
   }
@@ -2359,7 +2780,7 @@ var file = {
 };
 
 var u$6 = universalify.fromCallback;
-var path$a = require('path');
+var path$9 = require('path');
 
 
 var pathExists$3 = pathExists_1.pathExists;
@@ -2381,7 +2802,7 @@ function createLink (srcpath, dstpath, callback) {
         return callback(err)
       }
 
-      var dir = path$a.dirname(dstpath);
+      var dir = path$9.dirname(dstpath);
       pathExists$3(dir, function (err, dirExists) {
         if (err) { return callback(err) }
         if (dirExists) { return makeLink(srcpath, dstpath) }
@@ -2405,7 +2826,7 @@ function createLinkSync (srcpath, dstpath) {
     throw err
   }
 
-  var dir = path$a.dirname(dstpath);
+  var dir = path$9.dirname(dstpath);
   var dirExists = gracefulFs.existsSync(dir);
   if (dirExists) { return gracefulFs.linkSync(srcpath, dstpath) }
   mkdirs_1$1.mkdirsSync(dir);
@@ -2418,7 +2839,7 @@ var link = {
   createLinkSync: createLinkSync
 };
 
-var path$b = require('path');
+var path$a = require('path');
 
 var pathExists$4 = pathExists_1.pathExists;
 
@@ -2445,7 +2866,7 @@ var pathExists$4 = pathExists_1.pathExists;
  */
 
 function symlinkPaths (srcpath, dstpath, callback) {
-  if (path$b.isAbsolute(srcpath)) {
+  if (path$a.isAbsolute(srcpath)) {
     return gracefulFs.lstat(srcpath, function (err) {
       if (err) {
         err.message = err.message.replace('lstat', 'ensureSymlink');
@@ -2457,8 +2878,8 @@ function symlinkPaths (srcpath, dstpath, callback) {
       })
     })
   } else {
-    var dstdir = path$b.dirname(dstpath);
-    var relativeToDst = path$b.join(dstdir, srcpath);
+    var dstdir = path$a.dirname(dstpath);
+    var relativeToDst = path$a.join(dstdir, srcpath);
     return pathExists$4(relativeToDst, function (err, exists) {
       if (err) { return callback(err) }
       if (exists) {
@@ -2474,7 +2895,7 @@ function symlinkPaths (srcpath, dstpath, callback) {
           }
           return callback(null, {
             'toCwd': srcpath,
-            'toDst': path$b.relative(dstdir, srcpath)
+            'toDst': path$a.relative(dstdir, srcpath)
           })
         })
       }
@@ -2484,7 +2905,7 @@ function symlinkPaths (srcpath, dstpath, callback) {
 
 function symlinkPathsSync (srcpath, dstpath) {
   var exists;
-  if (path$b.isAbsolute(srcpath)) {
+  if (path$a.isAbsolute(srcpath)) {
     exists = gracefulFs.existsSync(srcpath);
     if (!exists) { throw new Error('absolute srcpath does not exist') }
     return {
@@ -2492,8 +2913,8 @@ function symlinkPathsSync (srcpath, dstpath) {
       'toDst': srcpath
     }
   } else {
-    var dstdir = path$b.dirname(dstpath);
-    var relativeToDst = path$b.join(dstdir, srcpath);
+    var dstdir = path$a.dirname(dstpath);
+    var relativeToDst = path$a.join(dstdir, srcpath);
     exists = gracefulFs.existsSync(relativeToDst);
     if (exists) {
       return {
@@ -2505,7 +2926,7 @@ function symlinkPathsSync (srcpath, dstpath) {
       if (!exists) { throw new Error('relative srcpath does not exist') }
       return {
         'toCwd': srcpath,
-        'toDst': path$b.relative(dstdir, srcpath)
+        'toDst': path$a.relative(dstdir, srcpath)
       }
     }
   }
@@ -2545,7 +2966,7 @@ var symlinkType_1 = {
 };
 
 var u$7 = universalify.fromCallback;
-var path$c = require('path');
+var path$b = require('path');
 
 
 var mkdirs$2 = mkdirs_1$1.mkdirs;
@@ -2573,7 +2994,7 @@ function createSymlink (srcpath, dstpath, type, callback) {
       srcpath = relative.toDst;
       symlinkType$1(relative.toCwd, type, function (err, type) {
         if (err) { return callback(err) }
-        var dir = path$c.dirname(dstpath);
+        var dir = path$b.dirname(dstpath);
         pathExists$5(dir, function (err, dirExists) {
           if (err) { return callback(err) }
           if (dirExists) { return gracefulFs.symlink(srcpath, dstpath, type, callback) }
@@ -2594,7 +3015,7 @@ function createSymlinkSync (srcpath, dstpath, type) {
   var relative = symlinkPathsSync$1(srcpath, dstpath);
   srcpath = relative.toDst;
   type = symlinkTypeSync$1(relative.toCwd, type);
-  var dir = path$c.dirname(dstpath);
+  var dir = path$b.dirname(dstpath);
   var exists = gracefulFs.existsSync(dir);
   if (exists) { return gracefulFs.symlinkSync(srcpath, dstpath, type) }
   mkdirsSync$1(dir);
@@ -2646,19 +3067,19 @@ process.chdir = function(d) {
 
 var polyfills$1 = patch$1;
 
-function patch$1 (fs$$1) {
+function patch$1 (fs) {
   // (re-)implement some things that are known busted or missing.
 
   // lchmod, broken prior to 0.6.2
   // back-port the fix here.
   if (constants.hasOwnProperty('O_SYMLINK') &&
       process.version.match(/^v0\.6\.[0-2]|^v0\.5\./)) {
-    patchLchmod(fs$$1);
+    patchLchmod(fs);
   }
 
   // lutimes implementation, or no-op
-  if (!fs$$1.lutimes) {
-    patchLutimes(fs$$1);
+  if (!fs.lutimes) {
+    patchLutimes(fs);
   }
 
   // https://github.com/isaacs/node-graceful-fs/issues/4
@@ -2666,42 +3087,42 @@ function patch$1 (fs$$1) {
   // It should not fail on enosys ever, as this just indicates
   // that a fs doesn't support the intended operation.
 
-  fs$$1.chown = chownFix(fs$$1.chown);
-  fs$$1.fchown = chownFix(fs$$1.fchown);
-  fs$$1.lchown = chownFix(fs$$1.lchown);
+  fs.chown = chownFix(fs.chown);
+  fs.fchown = chownFix(fs.fchown);
+  fs.lchown = chownFix(fs.lchown);
 
-  fs$$1.chmod = chmodFix(fs$$1.chmod);
-  fs$$1.fchmod = chmodFix(fs$$1.fchmod);
-  fs$$1.lchmod = chmodFix(fs$$1.lchmod);
+  fs.chmod = chmodFix(fs.chmod);
+  fs.fchmod = chmodFix(fs.fchmod);
+  fs.lchmod = chmodFix(fs.lchmod);
 
-  fs$$1.chownSync = chownFixSync(fs$$1.chownSync);
-  fs$$1.fchownSync = chownFixSync(fs$$1.fchownSync);
-  fs$$1.lchownSync = chownFixSync(fs$$1.lchownSync);
+  fs.chownSync = chownFixSync(fs.chownSync);
+  fs.fchownSync = chownFixSync(fs.fchownSync);
+  fs.lchownSync = chownFixSync(fs.lchownSync);
 
-  fs$$1.chmodSync = chmodFixSync(fs$$1.chmodSync);
-  fs$$1.fchmodSync = chmodFixSync(fs$$1.fchmodSync);
-  fs$$1.lchmodSync = chmodFixSync(fs$$1.lchmodSync);
+  fs.chmodSync = chmodFixSync(fs.chmodSync);
+  fs.fchmodSync = chmodFixSync(fs.fchmodSync);
+  fs.lchmodSync = chmodFixSync(fs.lchmodSync);
 
-  fs$$1.stat = statFix(fs$$1.stat);
-  fs$$1.fstat = statFix(fs$$1.fstat);
-  fs$$1.lstat = statFix(fs$$1.lstat);
+  fs.stat = statFix(fs.stat);
+  fs.fstat = statFix(fs.fstat);
+  fs.lstat = statFix(fs.lstat);
 
-  fs$$1.statSync = statFixSync(fs$$1.statSync);
-  fs$$1.fstatSync = statFixSync(fs$$1.fstatSync);
-  fs$$1.lstatSync = statFixSync(fs$$1.lstatSync);
+  fs.statSync = statFixSync(fs.statSync);
+  fs.fstatSync = statFixSync(fs.fstatSync);
+  fs.lstatSync = statFixSync(fs.lstatSync);
 
   // if lchmod/lchown do not exist, then make them no-ops
-  if (!fs$$1.lchmod) {
-    fs$$1.lchmod = function (path$$1, mode, cb) {
+  if (!fs.lchmod) {
+    fs.lchmod = function (path, mode, cb) {
       if (cb) { process.nextTick(cb); }
     };
-    fs$$1.lchmodSync = function () {};
+    fs.lchmodSync = function () {};
   }
-  if (!fs$$1.lchown) {
-    fs$$1.lchown = function (path$$1, uid, gid, cb) {
+  if (!fs.lchown) {
+    fs.lchown = function (path, uid, gid, cb) {
       if (cb) { process.nextTick(cb); }
     };
-    fs$$1.lchownSync = function () {};
+    fs.lchownSync = function () {};
   }
 
   // on Windows, A/V software can lock the directory, causing this
@@ -2714,7 +3135,7 @@ function patch$1 (fs$$1) {
   // CPU to a busy looping process, which can cause the program causing the lock
   // contention to be starved of CPU by node, so the contention doesn't resolve.
   if (platform$1 === "win32") {
-    fs$$1.rename = (function (fs$rename) { return function (from, to, cb) {
+    fs.rename = (function (fs$rename) { return function (from, to, cb) {
       var start = Date.now();
       var backoff = 0;
       fs$rename(from, to, function CB (er) {
@@ -2722,7 +3143,7 @@ function patch$1 (fs$$1) {
             && (er.code === "EACCES" || er.code === "EPERM")
             && Date.now() - start < 60000) {
           setTimeout(function() {
-            fs$$1.stat(to, function (stater, st) {
+            fs.stat(to, function (stater, st) {
               if (stater && stater.code === "ENOENT")
                 { fs$rename(from, to, CB); }
               else
@@ -2735,30 +3156,30 @@ function patch$1 (fs$$1) {
         }
         if (cb) { cb(er); }
       });
-    }})(fs$$1.rename);
+    }})(fs.rename);
   }
 
   // if read() returns EAGAIN, then just try it again.
-  fs$$1.read = (function (fs$read) { return function (fd, buffer, offset, length, position, callback_) {
+  fs.read = (function (fs$read) { return function (fd, buffer, offset, length, position, callback_) {
     var callback;
     if (callback_ && typeof callback_ === 'function') {
       var eagCounter = 0;
       callback = function (er, _, __) {
         if (er && er.code === 'EAGAIN' && eagCounter < 10) {
           eagCounter ++;
-          return fs$read.call(fs$$1, fd, buffer, offset, length, position, callback)
+          return fs$read.call(fs, fd, buffer, offset, length, position, callback)
         }
         callback_.apply(this, arguments);
       };
     }
-    return fs$read.call(fs$$1, fd, buffer, offset, length, position, callback)
-  }})(fs$$1.read);
+    return fs$read.call(fs, fd, buffer, offset, length, position, callback)
+  }})(fs.read);
 
-  fs$$1.readSync = (function (fs$readSync) { return function (fd, buffer, offset, length, position) {
+  fs.readSync = (function (fs$readSync) { return function (fd, buffer, offset, length, position) {
     var eagCounter = 0;
     while (true) {
       try {
-        return fs$readSync.call(fs$$1, fd, buffer, offset, length, position)
+        return fs$readSync.call(fs, fd, buffer, offset, length, position)
       } catch (er) {
         if (er.code === 'EAGAIN' && eagCounter < 10) {
           eagCounter ++;
@@ -2767,11 +3188,11 @@ function patch$1 (fs$$1) {
         throw er
       }
     }
-  }})(fs$$1.readSync);
+  }})(fs.readSync);
 
-  function patchLchmod (fs$$1) {
-    fs$$1.lchmod = function (path$$1, mode, callback) {
-      fs$$1.open( path$$1
+  function patchLchmod (fs) {
+    fs.lchmod = function (path, mode, callback) {
+      fs.open( path
              , constants.O_WRONLY | constants.O_SYMLINK
              , mode
              , function (err, fd) {
@@ -2781,82 +3202,82 @@ function patch$1 (fs$$1) {
         }
         // prefer to return the chmod error, if one occurs,
         // but still try to close, and report closing errors if they occur.
-        fs$$1.fchmod(fd, mode, function (err) {
-          fs$$1.close(fd, function(err2) {
+        fs.fchmod(fd, mode, function (err) {
+          fs.close(fd, function(err2) {
             if (callback) { callback(err || err2); }
           });
         });
       });
     };
 
-    fs$$1.lchmodSync = function (path$$1, mode) {
-      var fd = fs$$1.openSync(path$$1, constants.O_WRONLY | constants.O_SYMLINK, mode);
+    fs.lchmodSync = function (path, mode) {
+      var fd = fs.openSync(path, constants.O_WRONLY | constants.O_SYMLINK, mode);
 
       // prefer to return the chmod error, if one occurs,
       // but still try to close, and report closing errors if they occur.
       var threw = true;
       var ret;
       try {
-        ret = fs$$1.fchmodSync(fd, mode);
+        ret = fs.fchmodSync(fd, mode);
         threw = false;
       } finally {
         if (threw) {
           try {
-            fs$$1.closeSync(fd);
+            fs.closeSync(fd);
           } catch (er) {}
         } else {
-          fs$$1.closeSync(fd);
+          fs.closeSync(fd);
         }
       }
       return ret
     };
   }
 
-  function patchLutimes (fs$$1) {
+  function patchLutimes (fs) {
     if (constants.hasOwnProperty("O_SYMLINK")) {
-      fs$$1.lutimes = function (path$$1, at, mt, cb) {
-        fs$$1.open(path$$1, constants.O_SYMLINK, function (er, fd) {
+      fs.lutimes = function (path, at, mt, cb) {
+        fs.open(path, constants.O_SYMLINK, function (er, fd) {
           if (er) {
             if (cb) { cb(er); }
             return
           }
-          fs$$1.futimes(fd, at, mt, function (er) {
-            fs$$1.close(fd, function (er2) {
+          fs.futimes(fd, at, mt, function (er) {
+            fs.close(fd, function (er2) {
               if (cb) { cb(er || er2); }
             });
           });
         });
       };
 
-      fs$$1.lutimesSync = function (path$$1, at, mt) {
-        var fd = fs$$1.openSync(path$$1, constants.O_SYMLINK);
+      fs.lutimesSync = function (path, at, mt) {
+        var fd = fs.openSync(path, constants.O_SYMLINK);
         var ret;
         var threw = true;
         try {
-          ret = fs$$1.futimesSync(fd, at, mt);
+          ret = fs.futimesSync(fd, at, mt);
           threw = false;
         } finally {
           if (threw) {
             try {
-              fs$$1.closeSync(fd);
+              fs.closeSync(fd);
             } catch (er) {}
           } else {
-            fs$$1.closeSync(fd);
+            fs.closeSync(fd);
           }
         }
         return ret
       };
 
     } else {
-      fs$$1.lutimes = function (_a, _b, _c, cb) { if (cb) { process.nextTick(cb); } };
-      fs$$1.lutimesSync = function () {};
+      fs.lutimes = function (_a, _b, _c, cb) { if (cb) { process.nextTick(cb); } };
+      fs.lutimesSync = function () {};
     }
   }
 
   function chmodFix (orig) {
     if (!orig) { return orig }
     return function (target, mode, cb) {
-      return orig.call(fs$$1, target, mode, function (er) {
+      return orig.call(fs, target, mode, function (er) {
         if (chownErOk(er)) { er = null; }
         if (cb) { cb.apply(this, arguments); }
       })
@@ -2867,7 +3288,7 @@ function patch$1 (fs$$1) {
     if (!orig) { return orig }
     return function (target, mode) {
       try {
-        return orig.call(fs$$1, target, mode)
+        return orig.call(fs, target, mode)
       } catch (er) {
         if (!chownErOk(er)) { throw er }
       }
@@ -2878,7 +3299,7 @@ function patch$1 (fs$$1) {
   function chownFix (orig) {
     if (!orig) { return orig }
     return function (target, uid, gid, cb) {
-      return orig.call(fs$$1, target, uid, gid, function (er) {
+      return orig.call(fs, target, uid, gid, function (er) {
         if (chownErOk(er)) { er = null; }
         if (cb) { cb.apply(this, arguments); }
       })
@@ -2889,7 +3310,7 @@ function patch$1 (fs$$1) {
     if (!orig) { return orig }
     return function (target, uid, gid) {
       try {
-        return orig.call(fs$$1, target, uid, gid)
+        return orig.call(fs, target, uid, gid)
       } catch (er) {
         if (!chownErOk(er)) { throw er }
       }
@@ -2902,7 +3323,7 @@ function patch$1 (fs$$1) {
     // Older versions of Node erroneously returned signed integers for
     // uid + gid.
     return function (target, cb) {
-      return orig.call(fs$$1, target, function (er, stats) {
+      return orig.call(fs, target, function (er, stats) {
         if (!stats) { return cb.apply(this, arguments) }
         if (stats.uid < 0) { stats.uid += 0x100000000; }
         if (stats.gid < 0) { stats.gid += 0x100000000; }
@@ -2916,7 +3337,7 @@ function patch$1 (fs$$1) {
     // Older versions of Node erroneously returned signed integers for
     // uid + gid.
     return function (target) {
-      var stats = orig.call(fs$$1, target);
+      var stats = orig.call(fs, target);
       if (stats.uid < 0) { stats.uid += 0x100000000; }
       if (stats.gid < 0) { stats.gid += 0x100000000; }
       return stats;
@@ -2956,20 +3377,20 @@ var Stream$1 = require('stream').Stream;
 
 var legacyStreams$1 = legacy$1;
 
-function legacy$1 (fs$$1) {
+function legacy$1 (fs) {
   return {
     ReadStream: ReadStream,
     WriteStream: WriteStream
   }
 
-  function ReadStream (path$$1, options) {
-    if (!(this instanceof ReadStream)) { return new ReadStream(path$$1, options); }
+  function ReadStream (path, options) {
+    if (!(this instanceof ReadStream)) { return new ReadStream(path, options); }
 
     Stream$1.call(this);
 
     var self = this;
 
-    this.path = path$$1;
+    this.path = path;
     this.fd = null;
     this.readable = true;
     this.paused = false;
@@ -3013,7 +3434,7 @@ function legacy$1 (fs$$1) {
       return;
     }
 
-    fs$$1.open(this.path, this.flags, this.mode, function (err, fd) {
+    fs.open(this.path, this.flags, this.mode, function (err, fd) {
       if (err) {
         self.emit('error', err);
         self.readable = false;
@@ -3026,12 +3447,12 @@ function legacy$1 (fs$$1) {
     });
   }
 
-  function WriteStream (path$$1, options) {
-    if (!(this instanceof WriteStream)) { return new WriteStream(path$$1, options); }
+  function WriteStream (path, options) {
+    if (!(this instanceof WriteStream)) { return new WriteStream(path, options); }
 
     Stream$1.call(this);
 
-    this.path = path$$1;
+    this.path = path;
     this.fd = null;
     this.writable = true;
 
@@ -3064,7 +3485,7 @@ function legacy$1 (fs$$1) {
     this._queue = [];
 
     if (this.fd === null) {
-      this._open = fs$$1.open;
+      this._open = fs.open;
       this._queue.push([this._open, this.path, this.flags, this.mode, undefined]);
       this.flush();
     }
@@ -3090,7 +3511,7 @@ function clone$1 (obj) {
 }
 
 var gracefulFs$1 = createCommonjsModule(function (module) {
-var fs$$1 = require('fs');
+var fs = require('fs');
 
 
 
@@ -3118,10 +3539,10 @@ if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || '')) {
   });
 }
 
-module.exports = patch(clone_1$1(fs$$1));
-if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs$$1.__patched) {
-    module.exports = patch(fs$$1);
-    fs$$1.__patched = true;
+module.exports = patch(clone_1$1(fs));
+if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs.__patched) {
+    module.exports = patch(fs);
+    fs.__patched = true;
 }
 
 // Always patch fs.close/closeSync, because we want to
@@ -3129,22 +3550,22 @@ if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs$$1.__patched) {
 // This is essential when multiple graceful-fs instances are
 // in play at the same time.
 module.exports.close = (function (fs$close) { return function (fd, cb) {
-  return fs$close.call(fs$$1, fd, function (err) {
+  return fs$close.call(fs, fd, function (err) {
     if (!err)
       { retry(); }
 
     if (typeof cb === 'function')
       { cb.apply(this, arguments); }
   })
-}})(fs$$1.close);
+}})(fs.close);
 
 module.exports.closeSync = (function (fs$closeSync) { return function (fd) {
   // Note that graceful-fs also retries when fs.closeSync() fails.
   // Looks like a bug to me, although it's probably a harmless one.
-  var rval = fs$closeSync.apply(fs$$1, arguments);
+  var rval = fs$closeSync.apply(fs, arguments);
   retry();
   return rval
-}})(fs$$1.closeSync);
+}})(fs.closeSync);
 
 // Only patch fs once, otherwise we'll run into a memory leak if
 // graceful-fs is loaded multiple times, such as in test environments that
@@ -3152,31 +3573,31 @@ module.exports.closeSync = (function (fs$closeSync) { return function (fd) {
 // We look for the string `graceful-fs` from the comment above. This
 // way we are not adding any extra properties and it will detect if older
 // versions of graceful-fs are installed.
-if (!/\bgraceful-fs\b/.test(fs$$1.closeSync.toString())) {
-  fs$$1.closeSync = module.exports.closeSync;
-  fs$$1.close = module.exports.close;
+if (!/\bgraceful-fs\b/.test(fs.closeSync.toString())) {
+  fs.closeSync = module.exports.closeSync;
+  fs.close = module.exports.close;
 }
 
-function patch (fs$$1) {
+function patch (fs) {
   // Everything that references the open() function needs to be in here
-  polyfills$1(fs$$1);
-  fs$$1.gracefulify = patch;
-  fs$$1.FileReadStream = ReadStream;  // Legacy name.
-  fs$$1.FileWriteStream = WriteStream;  // Legacy name.
-  fs$$1.createReadStream = createReadStream;
-  fs$$1.createWriteStream = createWriteStream;
-  var fs$readFile = fs$$1.readFile;
-  fs$$1.readFile = readFile;
-  function readFile (path$$1, options, cb) {
+  polyfills$1(fs);
+  fs.gracefulify = patch;
+  fs.FileReadStream = ReadStream;  // Legacy name.
+  fs.FileWriteStream = WriteStream;  // Legacy name.
+  fs.createReadStream = createReadStream;
+  fs.createWriteStream = createWriteStream;
+  var fs$readFile = fs.readFile;
+  fs.readFile = readFile;
+  function readFile (path, options, cb) {
     if (typeof options === 'function')
       { cb = options, options = null; }
 
-    return go$readFile(path$$1, options, cb)
+    return go$readFile(path, options, cb)
 
-    function go$readFile (path$$1, options, cb) {
-      return fs$readFile(path$$1, options, function (err) {
+    function go$readFile (path, options, cb) {
+      return fs$readFile(path, options, function (err) {
         if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          { enqueue([go$readFile, [path$$1, options, cb]]); }
+          { enqueue([go$readFile, [path, options, cb]]); }
         else {
           if (typeof cb === 'function')
             { cb.apply(this, arguments); }
@@ -3186,18 +3607,18 @@ function patch (fs$$1) {
     }
   }
 
-  var fs$writeFile = fs$$1.writeFile;
-  fs$$1.writeFile = writeFile;
-  function writeFile (path$$1, data, options, cb) {
+  var fs$writeFile = fs.writeFile;
+  fs.writeFile = writeFile;
+  function writeFile (path, data, options, cb) {
     if (typeof options === 'function')
       { cb = options, options = null; }
 
-    return go$writeFile(path$$1, data, options, cb)
+    return go$writeFile(path, data, options, cb)
 
-    function go$writeFile (path$$1, data, options, cb) {
-      return fs$writeFile(path$$1, data, options, function (err) {
+    function go$writeFile (path, data, options, cb) {
+      return fs$writeFile(path, data, options, function (err) {
         if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          { enqueue([go$writeFile, [path$$1, data, options, cb]]); }
+          { enqueue([go$writeFile, [path, data, options, cb]]); }
         else {
           if (typeof cb === 'function')
             { cb.apply(this, arguments); }
@@ -3207,19 +3628,19 @@ function patch (fs$$1) {
     }
   }
 
-  var fs$appendFile = fs$$1.appendFile;
+  var fs$appendFile = fs.appendFile;
   if (fs$appendFile)
-    { fs$$1.appendFile = appendFile; }
-  function appendFile (path$$1, data, options, cb) {
+    { fs.appendFile = appendFile; }
+  function appendFile (path, data, options, cb) {
     if (typeof options === 'function')
       { cb = options, options = null; }
 
-    return go$appendFile(path$$1, data, options, cb)
+    return go$appendFile(path, data, options, cb)
 
-    function go$appendFile (path$$1, data, options, cb) {
-      return fs$appendFile(path$$1, data, options, function (err) {
+    function go$appendFile (path, data, options, cb) {
+      return fs$appendFile(path, data, options, function (err) {
         if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          { enqueue([go$appendFile, [path$$1, data, options, cb]]); }
+          { enqueue([go$appendFile, [path, data, options, cb]]); }
         else {
           if (typeof cb === 'function')
             { cb.apply(this, arguments); }
@@ -3229,10 +3650,10 @@ function patch (fs$$1) {
     }
   }
 
-  var fs$readdir = fs$$1.readdir;
-  fs$$1.readdir = readdir;
-  function readdir (path$$1, options, cb) {
-    var args = [path$$1];
+  var fs$readdir = fs.readdir;
+  fs.readdir = readdir;
+  function readdir (path, options, cb) {
+    var args = [path];
     if (typeof options !== 'function') {
       args.push(options);
     } else {
@@ -3258,31 +3679,31 @@ function patch (fs$$1) {
   }
 
   function go$readdir (args) {
-    return fs$readdir.apply(fs$$1, args)
+    return fs$readdir.apply(fs, args)
   }
 
   if (process.version.substr(0, 4) === 'v0.8') {
-    var legStreams = legacyStreams$1(fs$$1);
+    var legStreams = legacyStreams$1(fs);
     ReadStream = legStreams.ReadStream;
     WriteStream = legStreams.WriteStream;
   }
 
-  var fs$ReadStream = fs$$1.ReadStream;
+  var fs$ReadStream = fs.ReadStream;
   if (fs$ReadStream) {
     ReadStream.prototype = Object.create(fs$ReadStream.prototype);
     ReadStream.prototype.open = ReadStream$open;
   }
 
-  var fs$WriteStream = fs$$1.WriteStream;
+  var fs$WriteStream = fs.WriteStream;
   if (fs$WriteStream) {
     WriteStream.prototype = Object.create(fs$WriteStream.prototype);
     WriteStream.prototype.open = WriteStream$open;
   }
 
-  fs$$1.ReadStream = ReadStream;
-  fs$$1.WriteStream = WriteStream;
+  fs.ReadStream = ReadStream;
+  fs.WriteStream = WriteStream;
 
-  function ReadStream (path$$1, options) {
+  function ReadStream (path, options) {
     if (this instanceof ReadStream)
       { return fs$ReadStream.apply(this, arguments), this }
     else
@@ -3305,7 +3726,7 @@ function patch (fs$$1) {
     });
   }
 
-  function WriteStream (path$$1, options) {
+  function WriteStream (path, options) {
     if (this instanceof WriteStream)
       { return fs$WriteStream.apply(this, arguments), this }
     else
@@ -3325,26 +3746,26 @@ function patch (fs$$1) {
     });
   }
 
-  function createReadStream (path$$1, options) {
-    return new ReadStream(path$$1, options)
+  function createReadStream (path, options) {
+    return new ReadStream(path, options)
   }
 
-  function createWriteStream (path$$1, options) {
-    return new WriteStream(path$$1, options)
+  function createWriteStream (path, options) {
+    return new WriteStream(path, options)
   }
 
-  var fs$open = fs$$1.open;
-  fs$$1.open = open;
-  function open (path$$1, flags, mode, cb) {
+  var fs$open = fs.open;
+  fs.open = open;
+  function open (path, flags, mode, cb) {
     if (typeof mode === 'function')
       { cb = mode, mode = null; }
 
-    return go$open(path$$1, flags, mode, cb)
+    return go$open(path, flags, mode, cb)
 
-    function go$open (path$$1, flags, mode, cb) {
-      return fs$open(path$$1, flags, mode, function (err, fd) {
+    function go$open (path, flags, mode, cb) {
+      return fs$open(path, flags, mode, function (err, fd) {
         if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          { enqueue([go$open, [path$$1, flags, mode, cb]]); }
+          { enqueue([go$open, [path, flags, mode, cb]]); }
         else {
           if (typeof cb === 'function')
             { cb.apply(this, arguments); }
@@ -3354,7 +3775,7 @@ function patch (fs$$1) {
     }
   }
 
-  return fs$$1
+  return fs
 }
 
 function enqueue (elem) {
@@ -3391,14 +3812,14 @@ function readFile (file, options, callback) {
   }
 
   options = options || {};
-  var fs$$1 = options.fs || _fs;
+  var fs = options.fs || _fs;
 
   var shouldThrow = true;
   if ('throws' in options) {
     shouldThrow = options.throws;
   }
 
-  fs$$1.readFile(file, options, function (err, data) {
+  fs.readFile(file, options, function (err, data) {
     if (err) { return callback(err) }
 
     data = stripBom(data);
@@ -3425,7 +3846,7 @@ function readFileSync (file, options) {
     options = {encoding: options};
   }
 
-  var fs$$1 = options.fs || _fs;
+  var fs = options.fs || _fs;
 
   var shouldThrow = true;
   if ('throws' in options) {
@@ -3433,7 +3854,7 @@ function readFileSync (file, options) {
   }
 
   try {
-    var content = fs$$1.readFileSync(file, options);
+    var content = fs.readFileSync(file, options);
     content = stripBom(content);
     return JSON.parse(content, options.reviver)
   } catch (err) {
@@ -3469,7 +3890,7 @@ function writeFile (file, obj, options, callback) {
     options = {};
   }
   options = options || {};
-  var fs$$1 = options.fs || _fs;
+  var fs = options.fs || _fs;
 
   var str = '';
   try {
@@ -3480,16 +3901,16 @@ function writeFile (file, obj, options, callback) {
     return
   }
 
-  fs$$1.writeFile(file, str, options, callback);
+  fs.writeFile(file, str, options, callback);
 }
 
 function writeFileSync (file, obj, options) {
   options = options || {};
-  var fs$$1 = options.fs || _fs;
+  var fs = options.fs || _fs;
 
   var str = stringify(obj, options);
   // not sure if fs.writeFileSync returns anything, but just in case
-  return fs$$1.writeFileSync(file, str, options)
+  return fs.writeFileSync(file, str, options)
 }
 
 function stripBom (content) {
@@ -3519,7 +3940,7 @@ var jsonfile$1 = {
   writeJsonSync: jsonfile_1.writeFileSync
 };
 
-var path$d = require('path');
+var path$c = require('path');
 
 var pathExists$6 = pathExists_1.pathExists;
 
@@ -3530,7 +3951,7 @@ function outputJson (file, data, options, callback) {
     options = {};
   }
 
-  var dir = path$d.dirname(file);
+  var dir = path$c.dirname(file);
 
   pathExists$6(dir, function (err, itDoes) {
     if (err) { return callback(err) }
@@ -3545,12 +3966,12 @@ function outputJson (file, data, options, callback) {
 
 var outputJson_1 = outputJson;
 
-var path$e = require('path');
+var path$d = require('path');
 
 
 
 function outputJsonSync (file, data, options) {
-  var dir = path$e.dirname(file);
+  var dir = path$d.dirname(file);
 
   if (!gracefulFs.existsSync(dir)) {
     mkdirs_1$1.mkdirsSync(dir);
@@ -3576,7 +3997,7 @@ jsonfile$1.readJSONSync = jsonfile$1.readJsonSync;
 
 var json = jsonfile$1;
 
-var path$f = require('path');
+var path$e = require('path');
 var copySync$2 = copySync$1.copySync;
 var removeSync = remove.removeSync;
 var mkdirpSync$1 = mkdirs_1$1.mkdirsSync;
@@ -3586,14 +4007,14 @@ function moveSync (src, dest, options) {
   options = options || {};
   var overwrite = options.overwrite || options.clobber || false;
 
-  src = path$f.resolve(src);
-  dest = path$f.resolve(dest);
+  src = path$e.resolve(src);
+  dest = path$e.resolve(dest);
 
   if (src === dest) { return gracefulFs.accessSync(src) }
 
   if (isSrcSubdir$2(src, dest)) { throw new Error(("Cannot move '" + src + "' into itself '" + dest + "'.")) }
 
-  mkdirpSync$1(path$f.dirname(dest));
+  mkdirpSync$1(path$e.dirname(dest));
   tryRenameSync();
 
   function tryRenameSync () {
@@ -3681,7 +4102,7 @@ function isSrcSubdir$2 (src, dest) {
     return gracefulFs.statSync(src).isDirectory() &&
            src !== dest &&
            dest.indexOf(src) > -1 &&
-           dest.split(path$f.dirname(src) + path$f.sep)[1].split(path$f.sep)[0] === path$f.basename(src)
+           dest.split(path$e.dirname(src) + path$e.sep)[1].split(path$e.sep)[0] === path$e.basename(src)
   } catch (e) {
     return false
   }
@@ -3693,7 +4114,7 @@ var moveSync_1 = {
 
 var u$a = universalify.fromCallback;
 
-var path$g = require('path');
+var path$f = require('path');
 var copy$2 = copy$1.copy;
 var remove$1 = remove.remove;
 var mkdirp$1 = mkdirs_1$1.mkdirp;
@@ -3707,8 +4128,8 @@ function move (src, dest, opts, cb) {
 
   var overwrite = opts.overwrite || opts.clobber || false;
 
-  src = path$g.resolve(src);
-  dest = path$g.resolve(dest);
+  src = path$f.resolve(src);
+  dest = path$f.resolve(dest);
 
   if (src === dest) { return gracefulFs.access(src, cb) }
 
@@ -3718,7 +4139,7 @@ function move (src, dest, opts, cb) {
     if (st.isDirectory() && isSrcSubdir$3(src, dest)) {
       return cb(new Error(("Cannot move '" + src + "' to a subdirectory of itself, '" + dest + "'.")))
     }
-    mkdirp$1(path$g.dirname(dest), function (err) {
+    mkdirp$1(path$f.dirname(dest), function (err) {
       if (err) { return cb(err) }
       return doRename(src, dest, overwrite, cb)
     });
@@ -3760,8 +4181,8 @@ function moveAcrossDevice (src, dest, overwrite, cb) {
 }
 
 function isSrcSubdir$3 (src, dest) {
-  var srcArray = src.split(path$g.sep);
-  var destArray = dest.split(path$g.sep);
+  var srcArray = src.split(path$f.sep);
+  var destArray = dest.split(path$f.sep);
 
   return srcArray.reduce(function (acc, current, i) {
     return acc && destArray[i] === current
@@ -3774,7 +4195,7 @@ var move_1 = {
 
 var u$b = universalify.fromCallback;
 
-var path$h = require('path');
+var path$g = require('path');
 
 var pathExists$8 = pathExists_1.pathExists;
 
@@ -3784,7 +4205,7 @@ function outputFile (file, data, encoding, callback) {
     encoding = 'utf8';
   }
 
-  var dir = path$h.dirname(file);
+  var dir = path$g.dirname(file);
   pathExists$8(dir, function (err, itDoes) {
     if (err) { return callback(err) }
     if (itDoes) { return gracefulFs.writeFile(file, data, encoding, callback) }
@@ -3801,7 +4222,7 @@ function outputFileSync (file) {
   var args = [], len = arguments.length - 1;
   while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
 
-  var dir = path$h.dirname(file);
+  var dir = path$g.dirname(file);
   if (gracefulFs.existsSync(dir)) {
     return gracefulFs.writeFileSync.apply(gracefulFs, [ file ].concat( args ))
   }
@@ -3836,10 +4257,10 @@ module.exports = Object.assign(
 
 // Export fs.promises as a getter property so that we don't trigger
 // ExperimentalWarning before fs.promises is actually accessed.
-var fs$$1 = require('fs');
-if (Object.getOwnPropertyDescriptor(fs$$1, 'promises')) {
+var fs = require('fs');
+if (Object.getOwnPropertyDescriptor(fs, 'promises')) {
   Object.defineProperty(module.exports, 'promises', {
-    get: function get () { return fs$$1.promises }
+    get: function get () { return fs.promises }
   });
 }
 });
@@ -3883,6 +4304,8 @@ var prepareDirectories = function (directories) {
     }
   }
 };
+
+var fs$1 = {};
 
 var nargs = /\{([0-9a-zA-Z_]+)\}/g;
 
@@ -3928,11 +4351,11 @@ var htmlInjector = function (options) {
     generateBundle: function generateBundle () {
       var template = options.template;
       var target = options.target;
-      if (fs.existsSync(template)) {
-        var content = fs.readFileSync(template, 'utf-8');
+      if (fs$1.existsSync(template)) {
+        var content = fs$1.readFileSync(template, 'utf-8');
         content = stringTemplate(content, options.injects);
         lib.ensureFileSync(target);
-        fs.writeFileSync(target, content);
+        fs$1.writeFileSync(target, content);
         console.log(ansiColors.green(("\n" + (logUtils.success) + " HTML Injector: " + target)));
       } else {
         console.log(ansiColors.red(("\n" + (logUtils.error) + " HTML Injector: " + template)));
@@ -3940,6 +4363,241 @@ var htmlInjector = function (options) {
     }
   }
 };
+
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// resolves . and .. elements in a path array with directory names there
+// must be no slashes, empty elements, or device names (c:\) in the array
+// (so also no leading and trailing slashes - it does not distinguish
+// relative and absolute paths)
+function normalizeArray(parts, allowAboveRoot) {
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var last = parts[i];
+    if (last === '.') {
+      parts.splice(i, 1);
+    } else if (last === '..') {
+      parts.splice(i, 1);
+      up++;
+    } else if (up) {
+      parts.splice(i, 1);
+      up--;
+    }
+  }
+
+  // if the path is allowed to go above the root, restore leading ..s
+  if (allowAboveRoot) {
+    for (; up--; up) {
+      parts.unshift('..');
+    }
+  }
+
+  return parts;
+}
+
+// Split a filename into [root, dir, basename, ext], unix version
+// 'root' is just a slash, or nothing.
+var splitPathRe =
+    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+var splitPath = function(filename) {
+  return splitPathRe.exec(filename).slice(1);
+};
+
+// path.resolve([from ...], to)
+// posix version
+function resolve() {
+  var arguments$1 = arguments;
+
+  var resolvedPath = '',
+      resolvedAbsolute = false;
+
+  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+    var path = (i >= 0) ? arguments$1[i] : '/';
+
+    // Skip empty and invalid entries
+    if (typeof path !== 'string') {
+      throw new TypeError('Arguments to path.resolve must be strings');
+    } else if (!path) {
+      continue;
+    }
+
+    resolvedPath = path + '/' + resolvedPath;
+    resolvedAbsolute = path.charAt(0) === '/';
+  }
+
+  // At this point the path should be resolved to a full absolute path, but
+  // handle relative paths to be safe (might happen when process.cwd() fails)
+
+  // Normalize the path
+  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
+    return !!p;
+  }), !resolvedAbsolute).join('/');
+
+  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+}
+// path.normalize(path)
+// posix version
+function normalize(path) {
+  var isPathAbsolute = isAbsolute(path),
+      trailingSlash = substr(path, -1) === '/';
+
+  // Normalize the path
+  path = normalizeArray(filter(path.split('/'), function(p) {
+    return !!p;
+  }), !isPathAbsolute).join('/');
+
+  if (!path && !isPathAbsolute) {
+    path = '.';
+  }
+  if (path && trailingSlash) {
+    path += '/';
+  }
+
+  return (isPathAbsolute ? '/' : '') + path;
+}
+// posix version
+function isAbsolute(path) {
+  return path.charAt(0) === '/';
+}
+
+// posix version
+function join() {
+  var paths = Array.prototype.slice.call(arguments, 0);
+  return normalize(filter(paths, function(p, index) {
+    if (typeof p !== 'string') {
+      throw new TypeError('Arguments to path.join must be strings');
+    }
+    return p;
+  }).join('/'));
+}
+
+
+// path.relative(from, to)
+// posix version
+function relative(from, to) {
+  from = resolve(from).substr(1);
+  to = resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') { break; }
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') { break; }
+    }
+
+    if (start > end) { return []; }
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+}
+
+var sep = '/';
+var delimiter = ':';
+
+function dirname(path) {
+  var result = splitPath(path),
+      root = result[0],
+      dir = result[1];
+
+  if (!root && !dir) {
+    // No dirname whatsoever
+    return '.';
+  }
+
+  if (dir) {
+    // It has a dirname, strip trailing slash
+    dir = dir.substr(0, dir.length - 1);
+  }
+
+  return root + dir;
+}
+
+function basename(path, ext) {
+  var f = splitPath(path)[2];
+  // TODO: make this comparison case-insensitive on windows?
+  if (ext && f.substr(-1 * ext.length) === ext) {
+    f = f.substr(0, f.length - ext.length);
+  }
+  return f;
+}
+
+
+function extname(path) {
+  return splitPath(path)[3];
+}
+var path$h = {
+  extname: extname,
+  basename: basename,
+  dirname: dirname,
+  sep: sep,
+  delimiter: delimiter,
+  relative: relative,
+  join: join,
+  isAbsolute: isAbsolute,
+  normalize: normalize,
+  resolve: resolve
+};
+function filter (xs, f) {
+    if (xs.filter) { return xs.filter(f); }
+    var res = [];
+    for (var i = 0; i < xs.length; i++) {
+        if (f(xs[i], i, xs)) { res.push(xs[i]); }
+    }
+    return res;
+}
+
+// String.prototype.substr - negative index don't work in IE8
+var substr = 'ab'.substr(-1) === 'b' ?
+    function (str, start, len) { return str.substr(start, len) } :
+    function (str, start, len) {
+        if (start < 0) { start = str.length + start; }
+        return str.substr(start, len);
+    }
+;
 
 var pointer = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -3988,10 +4646,10 @@ var Pointer = /** @class */ (function () {
     /**
     `path` *must* be a properly escaped string.
     */
-    Pointer.fromJSON = function (path$$1) {
-        var tokens = path$$1.split('/').map(unescape);
+    Pointer.fromJSON = function (path) {
+        var tokens = path.split('/').map(unescape);
         if (tokens[0] !== '')
-            { throw new Error("Invalid JSON Pointer: " + path$$1); }
+            { throw new Error("Invalid JSON Pointer: " + path); }
         return new Pointer(tokens);
     };
     Pointer.prototype.toString = function () {
@@ -4223,9 +4881,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 var MissingError = /** @class */ (function (_super) {
     __extends(MissingError, _super);
-    function MissingError(path$$1) {
-        var _this = _super.call(this, "Value required at path: " + path$$1) || this;
-        _this.path = path$$1;
+    function MissingError(path) {
+        var _this = _super.call(this, "Value required at path: " + path) || this;
+        _this.path = path;
         _this.name = 'MissingError';
         return _this;
     }
@@ -4777,10 +5435,10 @@ exports.createPatch = createPatch;
 Create a test operation based on `input`'s current evaluation of the JSON
 Pointer `path`; if such a pointer cannot be resolved, returns undefined.
 */
-function createTest(input, path$$1) {
-    var endpoint = pointer.Pointer.fromJSON(path$$1).evaluate(input);
+function createTest(input, path) {
+    var endpoint = pointer.Pointer.fromJSON(path).evaluate(input);
     if (endpoint !== undefined) {
-        return { op: 'test', path: path$$1, value: endpoint.value };
+        return { op: 'test', path: path, value: endpoint.value };
     }
 }
 /**
@@ -4903,19 +5561,19 @@ var objectPath = createCommonjsModule(function (module) {
       }
     }
 
-    function set(obj, path$$1, value, doNotReplace){
-      if (typeof path$$1 === 'number') {
-        path$$1 = [path$$1];
+    function set(obj, path, value, doNotReplace){
+      if (typeof path === 'number') {
+        path = [path];
       }
-      if (!path$$1 || path$$1.length === 0) {
+      if (!path || path.length === 0) {
         return obj;
       }
-      if (typeof path$$1 === 'string') {
-        return set(obj, path$$1.split('.').map(getKey), value, doNotReplace);
+      if (typeof path === 'string') {
+        return set(obj, path.split('.').map(getKey), value, doNotReplace);
       }
-      var currentPath = path$$1[0];
+      var currentPath = path[0];
       var currentValue = getShallowProperty(obj, currentPath);
-      if (path$$1.length === 1) {
+      if (path.length === 1) {
         if (currentValue === void 0 || !doNotReplace) {
           obj[currentPath] = value;
         }
@@ -4924,29 +5582,29 @@ var objectPath = createCommonjsModule(function (module) {
 
       if (currentValue === void 0) {
         //check if we assume an array
-        if(typeof path$$1[1] === 'number') {
+        if(typeof path[1] === 'number') {
           obj[currentPath] = [];
         } else {
           obj[currentPath] = {};
         }
       }
 
-      return set(obj[currentPath], path$$1.slice(1), value, doNotReplace);
+      return set(obj[currentPath], path.slice(1), value, doNotReplace);
     }
 
-    objectPath.has = function (obj, path$$1) {
-      if (typeof path$$1 === 'number') {
-        path$$1 = [path$$1];
-      } else if (typeof path$$1 === 'string') {
-        path$$1 = path$$1.split('.');
+    objectPath.has = function (obj, path) {
+      if (typeof path === 'number') {
+        path = [path];
+      } else if (typeof path === 'string') {
+        path = path.split('.');
       }
 
-      if (!path$$1 || path$$1.length === 0) {
+      if (!path || path.length === 0) {
         return !!obj;
       }
 
-      for (var i = 0; i < path$$1.length; i++) {
-        var j = getKey(path$$1[i]);
+      for (var i = 0; i < path.length; i++) {
+        var j = getKey(path[i]);
 
         if((typeof j === 'number' && isArray(obj) && j < obj.length) ||
           (options.includeInheritedProps ? (j in Object(obj)) : hasOwnProperty(obj, j))) {
@@ -4959,26 +5617,26 @@ var objectPath = createCommonjsModule(function (module) {
       return true;
     };
 
-    objectPath.ensureExists = function (obj, path$$1, value){
-      return set(obj, path$$1, value, true);
+    objectPath.ensureExists = function (obj, path, value){
+      return set(obj, path, value, true);
     };
 
-    objectPath.set = function (obj, path$$1, value, doNotReplace){
-      return set(obj, path$$1, value, doNotReplace);
+    objectPath.set = function (obj, path, value, doNotReplace){
+      return set(obj, path, value, doNotReplace);
     };
 
-    objectPath.insert = function (obj, path$$1, value, at){
-      var arr = objectPath.get(obj, path$$1);
+    objectPath.insert = function (obj, path, value, at){
+      var arr = objectPath.get(obj, path);
       at = ~~at;
       if (!isArray(arr)) {
         arr = [];
-        objectPath.set(obj, path$$1, arr);
+        objectPath.set(obj, path, arr);
       }
       arr.splice(at, 0, value);
     };
 
-    objectPath.empty = function(obj, path$$1) {
-      if (isEmpty(path$$1)) {
+    objectPath.empty = function(obj, path) {
+      if (isEmpty(path)) {
         return void 0;
       }
       if (obj == null) {
@@ -4986,16 +5644,16 @@ var objectPath = createCommonjsModule(function (module) {
       }
 
       var value, i;
-      if (!(value = objectPath.get(obj, path$$1))) {
+      if (!(value = objectPath.get(obj, path))) {
         return void 0;
       }
 
       if (typeof value === 'string') {
-        return objectPath.set(obj, path$$1, '');
+        return objectPath.set(obj, path, '');
       } else if (isBoolean(value)) {
-        return objectPath.set(obj, path$$1, false);
+        return objectPath.set(obj, path, false);
       } else if (typeof value === 'number') {
-        return objectPath.set(obj, path$$1, 0);
+        return objectPath.set(obj, path, 0);
       } else if (isArray(value)) {
         value.length = 0;
       } else if (isObject(value)) {
@@ -5005,15 +5663,15 @@ var objectPath = createCommonjsModule(function (module) {
           }
         }
       } else {
-        return objectPath.set(obj, path$$1, null);
+        return objectPath.set(obj, path, null);
       }
     };
 
-    objectPath.push = function (obj, path$$1 /*, values */){
-      var arr = objectPath.get(obj, path$$1);
+    objectPath.push = function (obj, path /*, values */){
+      var arr = objectPath.get(obj, path);
       if (!isArray(arr)) {
         arr = [];
-        objectPath.set(obj, path$$1, arr);
+        objectPath.set(obj, path, arr);
       }
 
       arr.push.apply(arr, Array.prototype.slice.call(arguments, 2));
@@ -5031,62 +5689,62 @@ var objectPath = createCommonjsModule(function (module) {
       return defaultValue;
     };
 
-    objectPath.get = function (obj, path$$1, defaultValue){
-      if (typeof path$$1 === 'number') {
-        path$$1 = [path$$1];
+    objectPath.get = function (obj, path, defaultValue){
+      if (typeof path === 'number') {
+        path = [path];
       }
-      if (!path$$1 || path$$1.length === 0) {
+      if (!path || path.length === 0) {
         return obj;
       }
       if (obj == null) {
         return defaultValue;
       }
-      if (typeof path$$1 === 'string') {
-        return objectPath.get(obj, path$$1.split('.'), defaultValue);
+      if (typeof path === 'string') {
+        return objectPath.get(obj, path.split('.'), defaultValue);
       }
 
-      var currentPath = getKey(path$$1[0]);
+      var currentPath = getKey(path[0]);
       var nextObj = getShallowProperty(obj, currentPath);
       if (nextObj === void 0) {
         return defaultValue;
       }
 
-      if (path$$1.length === 1) {
+      if (path.length === 1) {
         return nextObj;
       }
 
-      return objectPath.get(obj[currentPath], path$$1.slice(1), defaultValue);
+      return objectPath.get(obj[currentPath], path.slice(1), defaultValue);
     };
 
-    objectPath.del = function del(obj, path$$1) {
-      if (typeof path$$1 === 'number') {
-        path$$1 = [path$$1];
+    objectPath.del = function del(obj, path) {
+      if (typeof path === 'number') {
+        path = [path];
       }
 
       if (obj == null) {
         return obj;
       }
 
-      if (isEmpty(path$$1)) {
+      if (isEmpty(path)) {
         return obj;
       }
-      if(typeof path$$1 === 'string') {
-        return objectPath.del(obj, path$$1.split('.'));
+      if(typeof path === 'string') {
+        return objectPath.del(obj, path.split('.'));
       }
 
-      var currentPath = getKey(path$$1[0]);
+      var currentPath = getKey(path[0]);
       if (!hasShallowProperty(obj, currentPath)) {
         return obj;
       }
 
-      if(path$$1.length === 1) {
+      if(path.length === 1) {
         if (isArray(obj)) {
           obj.splice(currentPath, 1);
         } else {
           delete obj[currentPath];
         }
       } else {
-        return objectPath.del(obj[currentPath], path$$1.slice(1));
+        return objectPath.del(obj[currentPath], path.slice(1));
       }
 
       return obj;
@@ -5109,12 +5767,12 @@ var walk = function (ref) {
   var list = ref.list; if ( list === void 0 ) list = {};
   var depth = ref.depth; if ( depth === void 0 ) depth = 0;
 
-  var files = fs.readdirSync(dir);
+  var files = fs$1.readdirSync(dir);
   ++depth;
   for (var i in files) {
     var file = files[i];
-    var _file = path.join(dir, file);
-    if (fs.statSync(_file).isDirectory()) {
+    var _file = path$h.join(dir, file);
+    if (fs$1.statSync(_file).isDirectory()) {
       walk({
         dir: _file,
         filter: filter,
@@ -5122,8 +5780,8 @@ var walk = function (ref) {
         depth: depth,
         list: depth === 1 ? list[file] = {} : list
       });
-    } else if ((filter.indexOf(path.extname(_file)) > -1) && depth > 1) {
-      list[path.relative(relativeTo, _file)] = JSON.parse(fs.readFileSync(_file, 'utf-8'));
+    } else if ((filter.indexOf(path$h.extname(_file)) > -1) && depth > 1) {
+      list[path$h.relative(relativeTo, _file)] = JSON.parse(fs$1.readFileSync(_file, 'utf-8'));
     }
   }
   return list
@@ -5164,8 +5822,8 @@ var i18n = function (options) {
     var translations = {};
 
     for (var file in langJson) {
-      var parsed = path.parse(file);
-      var key = path.join(parsed.dir, parsed.name).split(path.sep);
+      var parsed = path$h.parse(file);
+      var key = path$h.join(parsed.dir, parsed.name).split(path$h.sep);
       objectPath.set(translations, key, langJson[file]);
     }
 
@@ -5192,8 +5850,8 @@ var i18n = function (options) {
         key$1 = split[1].substring(1);
       }
 
-      location = path.join(target, lang$1, ((split[0]) + ".json"));
-      location = path.join(target, path.relative(target, location));
+      location = path$h.join(target, lang$1, ((split[0]) + ".json"));
+      location = path$h.join(target, path$h.relative(target, location));
 
       var content = (void 0);
       if (patch$1.op === 'add') {
@@ -5215,7 +5873,7 @@ var i18n = function (options) {
           lib.writeJSONSync(location, content, { spaces: '\t' });
         } else {
           message = (logUtils.error) + " Removing the file " + location + ". It does not exist in base language(" + baseLanguage + ") folder";
-          fs.unlinkSync(location);
+          fs$1.unlinkSync(location);
         }
       }
 

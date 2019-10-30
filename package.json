@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-app-utils",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Common application build utils: i18n strings bundler, html injects, prepare and clean directories",
   "main": "dist/rollup-plugin-app-utils.js",
   "module": "dist/rollup-plugin-app-utils.es.js",
@@ -20,7 +20,7 @@
   ],
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
-  "dependencies": {
+  "devDependencies": {
     "ansi-colors": "^3.2.3",
     "ava": "^1.1.0",
     "buble": "^0.19.6",
@@ -29,12 +29,14 @@
     "fs-extra": "^7.0.1",
     "log-utils": "^1.0.0",
     "object-path": "^0.11.4",
+    "package.json": "^2.0.1",
     "rfc6902": "^3.0.4",
     "rollup": "^1.1.0",
     "rollup-plugin-buble": "^0.19.6",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-filesize": "^6.0.0",
     "rollup-plugin-license": "^0.12.1",
+    "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-standard": "^1.0.0",
     "rollup-plugin-uglify": "^6.0.1",
