@@ -26,7 +26,7 @@
     "buble": "^0.19.6",
     "builtin-modules": "^3.0.0",
     "deepmerge": "^4.1.1",
-    "fs-extra": "^7.0.1",
+    "fs-extra": "^8.1.0",
     "log-utils": "^1.0.0",
     "object-path": "^0.11.4",
     "package.json": "^2.0.1",
@@ -41,5 +41,8 @@
     "rollup-plugin-standard": "^1.0.0",
     "rollup-plugin-uglify": "^6.0.1",
     "string-template": "^1.0.0"
+  },
+  "dependencies": {
+    "constants": "0.0.2"
   }
 }

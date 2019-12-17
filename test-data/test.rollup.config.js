@@ -1,4 +1,4 @@
-import Utils from '../src/index.js'
+const Utils = require('../dist/rollup-plugin-app-utils')
 
 const somedir1 = './test-data-copy/tdir/somedir1'
 const somedir2 = './test-data-copy/tdir/somedir2'

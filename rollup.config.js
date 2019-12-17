@@ -18,17 +18,17 @@ const bundleName = config.name
 
 const defaultConfig = [{
   input: 'src/index.js',
-  // external: builtins,
+  external: ['fs', 'stream', 'path', 'assert', 'util', 'os'],
   plugins: [
     standard(),
-    builtins(),
+    // builtins(),
     commonjs({
-      include: 'node_modules/**',
-      ignore: ['fs', 'stream', 'path', 'assert', 'util', 'os']
+      include: 'node_modules/**'
     }),
     resolve({
       include: 'node_modules/**',
-      extensions: ['.js']
+      extensions: ['.js'],
+      preferBuiltins: true
     }),
     buble({
       objectAssign: 'Object.assign'
@@ -51,12 +51,14 @@ const defaultConfig = [{
     {
       sourcemap: true,
       file: `./dist/${bundleName}.js`,
-      format: 'cjs'
+      format: 'cjs',
+      exports: 'named'
     },
     {
       sourcemap: true,
       file: `./dist/${bundleName}.es.js`,
-      format: 'esm'
+      format: 'esm',
+      exports: 'named'
     }
   ],
   watch: {
