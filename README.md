@@ -26,6 +26,7 @@
   Utils.i18nBundler({
     target: localesDir,
     baseLanguage: 'en',
+    skipBackFilling: false, // Please read Back Filling section below.
     // Optional
     transformer: (lang, data) => {
       return data
@@ -39,6 +40,8 @@ then in your JS import translations using below line
   import translations from 'i18n.translations'
   console.log(translations.en)
 ```
+
+###### Back Filling
 
 i18n bundler reads json files from the specified directory and prepares a JSON structure. It uses base language directory as reference directory and 
 
@@ -94,6 +97,7 @@ it will be transformed to below:
 ```
 
 Please check `test-data` folder for example structure. Then run `npm test` and take a look at `test-data-copy/output.js` and `test-data-copy/locales` for a better understanding.
+
 
 
 ##### copyAssets()

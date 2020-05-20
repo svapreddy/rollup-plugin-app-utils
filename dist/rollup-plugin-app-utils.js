@@ -1,6 +1,6 @@
 /** @license
  * Autodesk rollup-plugin-app-utils
- * Date: 2019-12-17
+ * Date: 2020-05-20
  * License: Apache-2.0
  *
  * Bundled dependencies (npm packages): 
@@ -4479,6 +4479,7 @@ var i18n = function (options) {
   var target = options.target;
   var baseLanguage = options.baseLanguage;
   var transformer = options.transformer;
+  var skipBackFilling = options.skipBackFilling;
 
   var transform = transformer || (function (lang, data) {
     return { translations: data }
@@ -4498,7 +4499,7 @@ var i18n = function (options) {
 
   for (var lang in data) {
     var langJson = data[lang];
-    if (baseLanguage !== lang) {
+    if ((baseLanguage !== lang) && !skipBackFilling) {
       var patch = rfc6902_2(langJson, base);
       patch = patch.filter(function (change) {
         return change.op !== 'replace'
@@ -4522,56 +4523,57 @@ var i18n = function (options) {
 
   console.log(ansiColors.bold('\nLanguages found:'), ansiColors.green(("" + languageList)));
 
-  for (var lang$1 in patches) {
-    if (patches[lang$1].length > 0) {
-      console.log(ansiColors.bold(("\nLanguage: \"" + lang$1 + "\" changes report")));
-    }
-
-    for (var i = 0; i < patches[lang$1].length; i++) {
-      var patch$1 = patches[lang$1][i];
-      var message = '';
-
-      var key$1 = null;
-      var location = patch$1.path.substring(1).replace(/(~1)/g, '/');
-      var split = location.split('.json');
-      if (split[1]) {
-        key$1 = split[1].substring(1);
+  if (!skipBackFilling) {
+    for (var lang$1 in patches) {
+      if (patches[lang$1].length > 0) {
+        console.log(ansiColors.bold(("\nLanguage: \"" + lang$1 + "\" changes report")));
       }
 
-      location = path.join(target, lang$1, ((split[0]) + ".json"));
-      location = path.join(target, path.relative(target, location));
+      for (var i = 0; i < patches[lang$1].length; i++) {
+        var patch$1 = patches[lang$1][i];
+        var message = '';
 
-      var content = (void 0);
-      if (patch$1.op === 'add') {
-        var value = patch$1.value;
-        if (key$1 && value) {
-          content = lib.readJsonSync(location);
-          objectPath.set(content, key$1.split('/'), value);
-          message = (logUtils.success) + " " + key$1 + " with the value from " + baseLanguage + " is added to the file: " + location;
-        } else {
-          message = (logUtils.success) + " " + location + " is created. Used the content from base language: " + baseLanguage;
-          content = value;
+        var key$1 = null;
+        var location = patch$1.path.substring(1).replace(/(~1)/g, '/');
+        var split = location.split('.json');
+        if (split[1]) {
+          key$1 = split[1].substring(1);
         }
-        lib.writeJSONSync(location, content, { spaces: '\t' });
-      } else if (patch$1.op === 'remove') {
-        if (key$1) {
-          message = (logUtils.error) + " The key " + key$1 + " is deleted from the file: " + location;
-          content = lib.readJsonSync(location);
-          objectPath.del(content, key$1.split('/'));
+
+        location = path.join(target, lang$1, ((split[0]) + ".json"));
+        location = path.join(target, path.relative(target, location));
+
+        var content = (void 0);
+        if (patch$1.op === 'add') {
+          var value = patch$1.value;
+          if (key$1 && value) {
+            content = lib.readJsonSync(location);
+            objectPath.set(content, key$1.split('/'), value);
+            message = (logUtils.success) + " " + key$1 + " with the value from " + baseLanguage + " is added to the file: " + location;
+          } else {
+            message = (logUtils.success) + " " + location + " is created. Used the content from base language: " + baseLanguage;
+            content = value;
+          }
           lib.writeJSONSync(location, content, { spaces: '\t' });
-        } else {
-          message = (logUtils.error) + " Removing the file " + location + ". It does not exist in base language(" + baseLanguage + ") folder";
-          fs.unlinkSync(location);
+        } else if (patch$1.op === 'remove') {
+          if (key$1) {
+            message = (logUtils.error) + " The key " + key$1 + " is deleted from the file: " + location;
+            content = lib.readJsonSync(location);
+            objectPath.del(content, key$1.split('/'));
+            lib.writeJSONSync(location, content, { spaces: '\t' });
+          } else {
+            message = (logUtils.error) + " Removing the file " + location + ". It does not exist in base language(" + baseLanguage + ") folder";
+            fs.unlinkSync(location);
+          }
         }
+
+        console.log(ansiColors.grey(("   " + message)));
       }
-
-      console.log(ansiColors.grey(("   " + message)));
     }
-  }
-
-  var patchedLanguages = Object.keys(patches);
-  if (patchedLanguages.length > 0) {
-    console.log(ansiColors.bold(("\nFiles at \"" + (patchedLanguages.join(', ')) + "\" are updated to match \"" + baseLanguage + "\"")));
+    var patchedLanguages = Object.keys(patches);
+    if (patchedLanguages.length > 0) {
+      console.log(ansiColors.bold(("\nFiles at \"" + (patchedLanguages.join(', ')) + "\" are updated to match \"" + baseLanguage + "\"")));
+    }
   }
 
   return result

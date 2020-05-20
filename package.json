@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-app-utils",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Common application build utils: i18n strings bundler, html injects, prepare and clean directories",
   "main": "dist/rollup-plugin-app-utils.js",
   "module": "dist/rollup-plugin-app-utils.es.js",

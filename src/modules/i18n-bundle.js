@@ -28,7 +28,7 @@ const walk = ({ dir, filter, relativeTo, list = {}, depth = 0 }) => {
 }
 
 const i18n = (options) => {
-  const { target, baseLanguage, transformer } = options
+  const { target, baseLanguage, transformer, skipBackFilling } = options
 
   const transform = transformer || ((lang, data) => {
     return { translations: data }
@@ -48,7 +48,7 @@ const i18n = (options) => {
 
   for (const lang in data) {
     const langJson = data[lang]
-    if (baseLanguage !== lang) {
+    if ((baseLanguage !== lang) && !skipBackFilling) {
       let patch = createPatch(langJson, base)
       patch = patch.filter((change) => {
         return change.op !== 'replace'
@@ -72,56 +72,57 @@ const i18n = (options) => {
 
   console.log(colors.bold('\nLanguages found:'), colors.green(`${languageList}`))
 
-  for (const lang in patches) {
-    if (patches[lang].length > 0) {
-      console.log(colors.bold(`\nLanguage: "${lang}" changes report`))
-    }
-
-    for (let i = 0; i < patches[lang].length; i++) {
-      const patch = patches[lang][i]
-      let message = ''
-
-      let key = null
-      let location = patch.path.substring(1).replace(/(~1)/g, '/')
-      const split = location.split('.json')
-      if (split[1]) {
-        key = split[1].substring(1)
+  if (!skipBackFilling) {
+    for (const lang in patches) {
+      if (patches[lang].length > 0) {
+        console.log(colors.bold(`\nLanguage: "${lang}" changes report`))
       }
 
-      location = path.join(target, lang, `${split[0]}.json`)
-      location = path.join(target, path.relative(target, location))
+      for (let i = 0; i < patches[lang].length; i++) {
+        const patch = patches[lang][i]
+        let message = ''
 
-      let content
-      if (patch.op === 'add') {
-        const value = patch.value
-        if (key && value) {
-          content = fsextra.readJsonSync(location)
-          objectPath.set(content, key.split('/'), value)
-          message = `${log.success} ${key} with the value from ${baseLanguage} is added to the file: ${location}`
-        } else {
-          message = `${log.success} ${location} is created. Used the content from base language: ${baseLanguage}`
-          content = value
+        let key = null
+        let location = patch.path.substring(1).replace(/(~1)/g, '/')
+        const split = location.split('.json')
+        if (split[1]) {
+          key = split[1].substring(1)
         }
-        fsextra.writeJSONSync(location, content, { spaces: '\t' })
-      } else if (patch.op === 'remove') {
-        if (key) {
-          message = `${log.error} The key ${key} is deleted from the file: ${location}`
-          content = fsextra.readJsonSync(location)
-          objectPath.del(content, key.split('/'))
+
+        location = path.join(target, lang, `${split[0]}.json`)
+        location = path.join(target, path.relative(target, location))
+
+        let content
+        if (patch.op === 'add') {
+          const value = patch.value
+          if (key && value) {
+            content = fsextra.readJsonSync(location)
+            objectPath.set(content, key.split('/'), value)
+            message = `${log.success} ${key} with the value from ${baseLanguage} is added to the file: ${location}`
+          } else {
+            message = `${log.success} ${location} is created. Used the content from base language: ${baseLanguage}`
+            content = value
+          }
           fsextra.writeJSONSync(location, content, { spaces: '\t' })
-        } else {
-          message = `${log.error} Removing the file ${location}. It does not exist in base language(${baseLanguage}) folder`
-          fs.unlinkSync(location)
+        } else if (patch.op === 'remove') {
+          if (key) {
+            message = `${log.error} The key ${key} is deleted from the file: ${location}`
+            content = fsextra.readJsonSync(location)
+            objectPath.del(content, key.split('/'))
+            fsextra.writeJSONSync(location, content, { spaces: '\t' })
+          } else {
+            message = `${log.error} Removing the file ${location}. It does not exist in base language(${baseLanguage}) folder`
+            fs.unlinkSync(location)
+          }
         }
+
+        console.log(colors.grey(`   ${message}`))
       }
-
-      console.log(colors.grey(`   ${message}`))
     }
-  }
-
-  const patchedLanguages = Object.keys(patches)
-  if (patchedLanguages.length > 0) {
-    console.log(colors.bold(`\nFiles at "${patchedLanguages.join(', ')}" are updated to match "${baseLanguage}"`))
+    const patchedLanguages = Object.keys(patches)
+    if (patchedLanguages.length > 0) {
+      console.log(colors.bold(`\nFiles at "${patchedLanguages.join(', ')}" are updated to match "${baseLanguage}"`))
+    }
   }
 
   return result

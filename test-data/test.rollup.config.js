@@ -41,6 +41,7 @@ const config = {
     }),
     Utils.i18nBundler({
       target: localesDir,
+      // skipBackFilling: true,
       baseLanguage: 'en',
       // Optional
       transformer: (lang, data) => {
