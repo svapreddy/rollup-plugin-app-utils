@@ -30,7 +30,7 @@
     "log-utils": "^1.0.0",
     "object-path": "^0.11.4",
     "package.json": "^2.0.1",
-    "rfc6902": "^3.0.4",
+    "rfc6902": "^5.0.0",
     "rollup": "^1.1.0",
     "rollup-plugin-buble": "^0.19.6",
     "rollup-plugin-commonjs": "^9.2.0",
